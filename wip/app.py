@@ -7,7 +7,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
 
 app = FastAPI()
-connection = Connection("pie.db")
+connection = Connection("/database/pie.db")
 connection.row_factory = Row
 
 templates = Jinja2Templates(directory="templates")

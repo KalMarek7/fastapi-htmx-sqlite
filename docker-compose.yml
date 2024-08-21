@@ -3,3 +3,5 @@ services:
     build: ./wip
     ports:
       - 127.0.0.1:3000:3000
+    volumes:
+          - /srv/fastapi-htmx-sqlite/db-1:/database
