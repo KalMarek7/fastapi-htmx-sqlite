@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>poc</title>
+  </head>
+  <body>
+    <h1>Welcome</h1>
+    <form
+      hx-post="/api/v1/item"
+      hx-trigger="submit"
+      hx-target="#item-cnt"
+      hx-swap="innerHTML"
+      hx-ext="json-enc"
+    >
+      <label>Item name</label>
+      <input type="text" name="name" />
+      <label>Item expiry date</label>
+      <input type="text" name="expiry_date" />
+      <label>Image</label>
+      <input type="text" name="image" />
+      <label>Category</label>
+      <input type="text" name="category" />
+      <label>Notes</label>
+      <input type="text" name="notes" />
+      <input type="submit" />
+    </form>
+    <div
+      id="item-cnt"
+      hx-trigger="load"
+      hx-get="/api/v1/items"
+      hx-swap="innerHTML"
+    ></div>
+    <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
+  </body>
+</html>
