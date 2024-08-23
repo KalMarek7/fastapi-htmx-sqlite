@@ -42,8 +42,10 @@ async def upload(request: Request, file: List[UploadFile] = File(...)) -> HTMLRe
         file_content = await i.read()
         print(i)
         encoded_data = base64.b64encode(file_content).decode("utf-8")
+        filename = i.filename or "Default-name"
+        filesize = i.size or 1337
         item = UploadItem(src=encoded_data,
-                          filename=i.filename, filesize=i.size)
+                          filename=filename, filesize=filesize)
         insert_image(connection, item)
 
     images = get_images(connection)
