@@ -53,13 +53,13 @@ def get_images(connection: Connection) -> Images:
         cur = connection.cursor()
         cur.execute(
             '''
-            SELECT src, filename, filesize
+            SELECT id, src, filename, filesize
             FROM
             pictures
             '''
         )
         images_list = [UploadItem(**dict(row)) for row in cur.fetchall()]
-        # print(images_list)
+        print(images_list)
         return Images(images=images_list)
 
 

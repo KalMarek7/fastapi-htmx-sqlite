@@ -18,6 +18,7 @@ class Items(BaseModel):
 
 class UploadItem(BaseModel):
     # image: str
+    id: Optional[int] = None
     src: str
     filename: str
     filesize: int

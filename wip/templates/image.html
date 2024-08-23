@@ -1,5 +1,15 @@
 {% for img in images %}
-<h1>Filename: {{ img.filename }}</h1>
-<p>Filesize: {{ img.filesize }}</p>
-<img src="data:image/png;base64,{{ img.src }}" alt="Embedded Image" />
+<div id="image-{{ img.id }}">
+    <h1>Filename: {{ img.filename }}</h1>
+    <p>Filesize: {{ img.filesize }}</p>
+    <img src="data:image/png;base64,{{ img.src }}" alt="Embedded Image" />
+    <button
+        hx-get="/api/v1/edit_image"
+        hx-trigger="click"
+        hx-target="#image-{{ img.id }}"
+        hx-swap="afterend"
+    >
+        Edit info
+    </button>
+</div>
 {% endfor %}

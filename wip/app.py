@@ -56,3 +56,8 @@ async def upload(request: Request, file: List[UploadFile] = File(...)) -> HTMLRe
 async def fetch_items(request: Request) -> HTMLResponse:
     images = get_images(connection)
     return templates.TemplateResponse(request, "./image.html", context=images.model_dump())
+
+
+@app.get("/api/v1/edit_image")
+async def edit(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(request, "./edit.html")
