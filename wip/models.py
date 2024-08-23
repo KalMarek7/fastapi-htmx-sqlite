@@ -14,3 +14,11 @@ class ItemModel(BaseModel):
 
 class Items(BaseModel):
     items: List[ItemModel]
+
+
+class UploadItem(BaseModel):
+    image: str
+
+
+class Images(BaseModel):
+    images: List[UploadItem]
