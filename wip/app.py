@@ -5,6 +5,7 @@ from sqlite3 import Connection, Row
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
+from typing import List
 import base64
 
 app = FastAPI()
@@ -36,11 +37,15 @@ async def add_item(request: Request, item: ItemModel) -> HTMLResponse:
 
 
 @app.post("/api/v1/images")
-async def upload(request: Request, file: UploadFile = File(...)) -> HTMLResponse:
-    file_content = await file.read()
-    encoded_data = base64.b64encode(file_content).decode("utf-8")
-    item = UploadItem(image=encoded_data)
-    insert_image(connection, item)
+async def upload(request: Request, file: List[UploadFile] = File(...)) -> HTMLResponse:
+    for i in file:
+        file_content = await i.read()
+        print(i)
+        encoded_data = base64.b64encode(file_content).decode("utf-8")
+        item = UploadItem(src=encoded_data,
+                          filename=i.filename, filesize=i.size)
+        insert_image(connection, item)
+
     images = get_images(connection)
     return templates.TemplateResponse(request, "./image.html", context=images.model_dump())
 

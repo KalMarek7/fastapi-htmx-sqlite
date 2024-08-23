@@ -36,12 +36,12 @@ def insert_item(connection: Connection, item: ItemModel):
 def insert_image(connection: Connection, item: UploadItem):
     with connection:
         cur = connection.cursor()
-        print(item.image)
+        # print(item.image)
         cur.execute(
             '''
-            INSERT INTO images(image)
+            INSERT INTO pictures(src, filename, filesize)
             VALUES
-            (:image)
+            (:src, :filename, :filesize)
             ''',
             item.model_dump()
         )
@@ -53,12 +53,13 @@ def get_images(connection: Connection) -> Images:
         cur = connection.cursor()
         cur.execute(
             '''
-            SELECT image
+            SELECT src, filename, filesize
             FROM
-            images
+            pictures
             '''
         )
         images_list = [UploadItem(**dict(row)) for row in cur.fetchall()]
+        # print(images_list)
         return Images(images=images_list)
 
 

@@ -17,7 +17,10 @@ class Items(BaseModel):
 
 
 class UploadItem(BaseModel):
-    image: str
+    # image: str
+    src: str
+    filename: str
+    filesize: int
 
 
 class Images(BaseModel):

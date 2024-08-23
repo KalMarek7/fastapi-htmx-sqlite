@@ -1,3 +1,5 @@
 {% for img in images %}
-<img src="data:image/png;base64,{{ img.image }}" alt="Embedded Image" />
+<h1>Filename: {{ img.filename }}</h1>
+<p>Filesize: {{ img.filesize }}</p>
+<img src="data:image/png;base64,{{ img.src }}" alt="Embedded Image" />
 {% endfor %}
