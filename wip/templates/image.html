@@ -4,7 +4,7 @@
     <p>Filesize: {{ img.filesize }}</p>
     <img src="data:image/png;base64,{{ img.src }}" alt="Embedded Image" />
     <button
-        hx-get="/api/v1/edit_image"
+        hx-get="/api/v1/edit_image/{{ img.id }}"
         hx-trigger="click"
         hx-target="#image-{{ img.id }}"
         hx-swap="afterend"

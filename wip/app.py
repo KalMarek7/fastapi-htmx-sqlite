@@ -58,6 +58,13 @@ async def fetch_items(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request, "./image.html", context=images.model_dump())
 
 
-@app.get("/api/v1/edit_image")
-async def edit(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse(request, "./edit.html")
+@app.get("/api/v1/edit_image/{id}")
+async def start_edit(request: Request, id: int) -> HTMLResponse:
+    print(request.json)
+    return templates.TemplateResponse(request, "./edit.html", context={"id": id})
+
+
+@app.post("/api/v1/edit_image/{id}")
+async def edit(request: Request, id: int) -> HTMLResponse:
+    print(request.json)
+    return templates.TemplateResponse(request, "./edit.html", context={"id": id})

@@ -1,7 +1,6 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from datetime import datetime
-from typing import Optional
 
 
 class ItemModel(BaseModel):

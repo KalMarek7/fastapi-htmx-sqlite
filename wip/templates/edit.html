@@ -1,1 +1,11 @@
-<p>Hello hello</p>
+<form hx-post="/api/v1/edit_image/{{ id }} ">
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" required />
+    <label for="expDate">Expiry date</label>
+    <input type="date" name="expDate" id="expDate" required />
+    <label for="category">Category</label>
+    <input type="text" name="category" id="category" />
+    <label for="notes">Notes</label>
+    <input type="text" name="notes" id="notes" />
+    <input type="submit" value="Submit" />
+</form>

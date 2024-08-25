@@ -59,7 +59,7 @@ def get_images(connection: Connection) -> Images:
             '''
         )
         images_list = [UploadItem(**dict(row)) for row in cur.fetchall()]
-        print(images_list)
+        # print(images_list)
         return Images(images=images_list)
 
 
