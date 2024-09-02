@@ -79,7 +79,7 @@ async def edit_item(
         name: str = Form(...),
         expiry_date: str = Form(...),
         picture_id: int = Form(...),
-        category: str = Form(...),
+        category: str = Form(None),
         notes: str = Form(None)
 ) -> dict:
 

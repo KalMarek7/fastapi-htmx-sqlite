@@ -7,7 +7,7 @@ class ItemModel(BaseModel):
     picture_id: int
     name: str
     expiry_date: datetime.date
-    category: str
+    category: Optional[str] = None
     notes: Optional[str] = None
     image: Optional[str] = None
     item_id: Optional[int] = None
