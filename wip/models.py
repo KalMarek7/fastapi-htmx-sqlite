@@ -1,15 +1,16 @@
 from typing import List, Optional
 from pydantic import BaseModel
-from datetime import datetime
+import datetime
 
 
 class ItemModel(BaseModel):
-    name: str
-    expiry_date: str
     picture_id: int
+    name: str
+    expiry_date: datetime.date
     category: str
     notes: Optional[str] = None
     image: Optional[str] = None
+    item_id: Optional[int] = None
 
 
 class Items(BaseModel):

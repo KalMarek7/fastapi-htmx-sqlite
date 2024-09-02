@@ -8,6 +8,14 @@
     <body>
         <h1>Welcome</h1>
         <a href="/upload">Upload image</a>
+        <button
+            hx-get="/api/v1/date_filtered_items"
+            hx-trigger="click"
+            hx-target="#item-cnt"
+            hx-swap="innerHTML"
+        >
+            Soon expired
+        </button>
         <div
             id="item-cnt"
             hx-trigger="load"

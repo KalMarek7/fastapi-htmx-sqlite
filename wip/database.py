@@ -16,14 +16,14 @@ def get_items(connection: Connection) -> Items:
             '''
         )
         items_list = [ItemModel(**dict(row)) for row in cur.fetchall()]
-        print(items_list)
+        # print(items_list)
         return Items(items=items_list)
 
 
 def insert_item(connection: Connection, item: ItemModel):
     with connection:
         cur = connection.cursor()
-        print(item)
+        # print(item)
         cur.execute(
             '''
             INSERT INTO items(name, expiry_date, picture_id, category, notes)
@@ -85,15 +85,25 @@ def date_filtered_items(connection: Connection) -> Items:
         print(today)
         delta = today + timedelta(days=3)
         print(delta)
+        """ query = '''
+            SELECT items.id AS item_id, items.name, items.expiry_date, pictures.src AS image, items.category, items.notes, pictures.id AS picture_id
+            FROM items
+            JOIN pictures ON items.picture_id = pictures.id
+            WHERE items.expiry_date BETWEEN ? AND ?
+        ''' """
+
         query = '''
             SELECT items.id AS item_id, items.name, items.expiry_date, pictures.src AS image, items.category, items.notes, pictures.id AS picture_id
             FROM items
             JOIN pictures ON items.picture_id = pictures.id
             WHERE items.expiry_date BETWEEN ? AND ?
+            ORDER BY items.expiry_date DESC
         '''
+
         cur.execute(query, (today, delta))
         items_list = [ItemModel(**dict(row)) for row in cur.fetchall()]
-        print(items_list)
+        items_list.sort(key=lambda x: x.expiry_date, reverse=True)
+        # print(items_list)
         return Items(items=items_list)
 
 

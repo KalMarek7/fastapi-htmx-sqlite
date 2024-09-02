@@ -1,5 +1,5 @@
 {% for item in items %}
-<div id="image-{{ item.item_id }}">
+<div id="item-{{ item.item_id }}">
     <h1>Filename: {{ item.name }}</h1>
     <img src="data:image/png;base64,{{ item.image }}" alt="Embedded Image" />
     <p>Expiry date: {{ item.expiry_date }}</p>

@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
 from sqlite3 import Connection, Row
+from datetime import date
 
 app = FastAPI()
 connection = Connection("./database/food.db")
@@ -30,7 +31,7 @@ async def upload_site(request: Request) -> HTMLResponse:
 @app.get("/api/v1/items")
 async def fetch_items(request: Request) -> HTMLResponse:
     items = get_items(connection)
-    print(items)
+    # print(items)
     return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
 
 
@@ -84,21 +85,20 @@ async def edit_item(
 
     item = ItemModel(
         name=name,
-        expiry_date=expiry_date,
+        expiry_date=date.fromisoformat(expiry_date),
         picture_id=id,
         category=category,
-        notes=notes
+        notes=notes,
+        item_id=id
     )
+    # print("HAA", item)
     insert_item(connection, item)
     update_image(connection, id)
     return {"message": "success"}
 
 
 @app.get("/api/v1/date_filtered_items")
-async def date_filtered_images(request: Request) -> dict:
+async def date_filtered_images(request: Request) -> HTMLResponse:
     items = date_filtered_items(connection)
-    print(items)
-    # return templates.TemplateResponse(request, "./image.html", context=items.model_dump())
-    return {
-        "message": "success"
-    }
+    # print(items)
+    return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
