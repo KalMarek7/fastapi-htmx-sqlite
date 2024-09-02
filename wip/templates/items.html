@@ -1,7 +1,17 @@
 {% for item in items %}
-<h3>{{ item.name }}</h3>
-<p>{{ item.expiry_date }}</p>
-<p>{{ item.image }}</p>
-<p>{{ item.category }}</p>
-<p>{{ item.notes }}</p>
+<div id="image-{{ item.item_id }}">
+    <h1>Filename: {{ item.name }}</h1>
+    <img src="data:image/png;base64,{{ item.image }}" alt="Embedded Image" />
+    <p>Expiry date: {{ item.expiry_date }}</p>
+    <p>Category: {{ item.category }}</p>
+    <p>Notes: {{ item.notes }}</p>
+    <button
+        hx-get="/api/v1/edit_image/{{ item.id }}"
+        hx-trigger="click"
+        hx-target="#image-{{ item.id }}"
+        hx-swap="afterend"
+    >
+        Edit info
+    </button>
+</div>
 {% endfor %}

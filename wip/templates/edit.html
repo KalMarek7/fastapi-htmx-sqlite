@@ -1,8 +1,16 @@
 <form hx-post="/api/v1/edit_image/{{ id }} ">
+    <label for="picture_id" style="display: none">Id</label>
+    <input
+        type="number"
+        name="picture_id"
+        id="picture_id"
+        value="{{ id }}"
+        style="display: none"
+    />
     <label for="name">Name</label>
     <input type="text" name="name" id="name" required />
-    <label for="expDate">Expiry date</label>
-    <input type="date" name="expDate" id="expDate" required />
+    <label for="expiry_date">Expiry date</label>
+    <input type="date" name="expiry_date" id="expiry_date" required />
     <label for="category">Category</label>
     <input type="text" name="category" id="category" />
     <label for="notes">Notes</label>

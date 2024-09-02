@@ -1,8 +1,9 @@
-{% for img in images %}
+{% for img in images %} {% if img.initial %}
 <div id="image-{{ img.id }}">
     <h1>Filename: {{ img.filename }}</h1>
     <p>Filesize: {{ img.filesize }}</p>
     <img src="data:image/png;base64,{{ img.src }}" alt="Embedded Image" />
+    <p>Initial: {{ img.initial }}</p>
     <button
         hx-get="/api/v1/edit_image/{{ img.id }}"
         hx-trigger="click"
@@ -12,4 +13,4 @@
         Edit info
     </button>
 </div>
-{% endfor %}
+{% endif %} {% endfor %}

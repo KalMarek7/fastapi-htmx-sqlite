@@ -1,14 +1,15 @@
-from pydantic import BaseModel
 from typing import List, Optional
+from pydantic import BaseModel
 from datetime import datetime
 
 
 class ItemModel(BaseModel):
     name: str
-    expiry_date: datetime
-    image: str  # Base64 encoded image
+    expiry_date: str
+    picture_id: int
     category: str
     notes: Optional[str] = None
+    image: Optional[str] = None
 
 
 class Items(BaseModel):
@@ -21,6 +22,7 @@ class UploadItem(BaseModel):
     src: str
     filename: str
     filesize: int
+    initial: bool
 
 
 class Images(BaseModel):

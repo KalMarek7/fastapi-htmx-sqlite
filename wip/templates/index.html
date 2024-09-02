@@ -7,24 +7,14 @@
     </head>
     <body>
         <h1>Welcome</h1>
-        <form
-            hx-post="/api/v1/images"
-            hx-trigger="submit"
-            enctype="multipart/form-data"
-            hx-target="#item-cnt"
-            hx-swap="innerHTML"
-        >
-            <label>Image</label>
-            <input type="file" name="file" multiple />
-            <input type="submit" />
-        </form>
+        <a href="/upload">Upload image</a>
         <div
             id="item-cnt"
             hx-trigger="load"
-            hx-get="/api/v1/images"
+            hx-get="/api/v1/items"
             hx-swap="innerHTML"
         ></div>
         <script src="https://unpkg.com/htmx.org@2.0.2"></script>
-        <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
+        <!-- <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script> -->
     </body>
 </html>

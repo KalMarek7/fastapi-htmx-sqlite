@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Upload</title>
+    </head>
+    <body>
+        <a href="/">Home</a>
+        <form
+            hx-post="/api/v1/images"
+            hx-trigger="submit"
+            enctype="multipart/form-data"
+            hx-target="#image-cnt"
+            hx-swap="innerHTML"
+        >
+            <label>Image</label>
+            <input type="file" name="file" multiple />
+            <input type="submit" />
+        </form>
+        <div
+            id="image-cnt"
+            hx-trigger="load"
+            hx-get="/api/v1/images"
+            hx-swap="innerHTML"
+        ></div>
+        <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+    </body>
+</html>
