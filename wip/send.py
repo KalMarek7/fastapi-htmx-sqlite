@@ -3,8 +3,7 @@ import smtplib
 
 
 def send_email(email: dict) -> None:
-    """Send an email using the provided arguments."""
-    msg = MIMEText(email["message"])
+    msg = MIMEText(email["message"], "html")
     msg["Subject"] = email["subject"]
     msg["From"] = email["from_addr"]
     msg["To"] = email["to_addr"]
@@ -19,14 +18,3 @@ def send_email(email: dict) -> None:
         print("Error: unable to send email")
         print(e)
     server.quit()
-
-
-if __name__ == "__main__":
-    email = {
-        "subject": "Test Email",
-        "message": "Hello, this is a test email.",
-        "from_addr": "appsandscripts7@gmail.com",
-        "to_addr": "marekkal7@gmail.com",
-        "password": "nimp qzkw hkjh epta"
-    }
-    send_email(email)

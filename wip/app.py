@@ -1,5 +1,6 @@
 from database import insert_image, get_images, update_image, insert_item, get_items, date_filtered_items
 from models import Items, ItemModel, UploadItem
+from send import send_email
 from typing import List
 import base64
 from fastapi import FastAPI, File, UploadFile, Form
@@ -8,6 +9,11 @@ from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
 from sqlite3 import Connection, Row
 from datetime import date
+import os
+
+USERNAME = os.getenv("USERNAME", "not_set")
+PASSWORD = os.getenv("PASSWORD", "not_set")
+EMAIL = os.getenv("EMAIL", "not_set")
 
 app = FastAPI()
 connection = Connection("./database/food.db")
@@ -98,7 +104,28 @@ async def edit_item(
 
 
 @app.get("/api/v1/date_filtered_items")
-async def date_filtered_images(request: Request) -> HTMLResponse:
+async def date_filtered_images(request: Request):
     items = date_filtered_items(connection)
-    # print(items)
-    return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
+    items_dict = items.model_dump()
+    if request.headers.get("custom_format") == "text/html":
+        return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
+    else:
+        message = ""
+        for item in items_dict["items"]:
+            message += f"""
+            Name: {item['name']}<br>
+            Expiry date: {item['expiry_date']}<br>
+            Category: {item['category']}<br>
+            Notes: {item['notes']}<br>
+            <br><br>
+            """
+
+        message = "Hello. Below you'll find food items about to expire in the next 3 days.<br><br>" + message
+        send_email(email={
+            "subject": "Test Email from FastAPI",
+            "message": message,
+            "from_addr": f"{USERNAME}",
+            "to_addr": f"{EMAIL}",
+            "password": f"{PASSWORD}"
+        })
+        return {"message": "success"}

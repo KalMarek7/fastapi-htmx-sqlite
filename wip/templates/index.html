@@ -13,8 +13,17 @@
             hx-trigger="click"
             hx-target="#item-cnt"
             hx-swap="innerHTML"
+            hx-headers='{"custom_format": "text/html"}'
         >
             Soon expired
+        </button>
+        <button
+            hx-get="/api/v1/date_filtered_items"
+            hx-trigger="click"
+            hx-target="#item-cnt"
+            hx-swap="innerHTML"
+        >
+            Send email
         </button>
         <div
             id="item-cnt"

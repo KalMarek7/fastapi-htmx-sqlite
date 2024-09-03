@@ -16,6 +16,7 @@ def get_items(connection: Connection) -> Items:
             '''
         )
         items_list = [ItemModel(**dict(row)) for row in cur.fetchall()]
+        items_list.sort(key=lambda x: x.expiry_date)
         # print(items_list)
         return Items(items=items_list)
 
@@ -85,12 +86,6 @@ def date_filtered_items(connection: Connection) -> Items:
         print(today)
         delta = today + timedelta(days=3)
         print(delta)
-        """ query = '''
-            SELECT items.id AS item_id, items.name, items.expiry_date, pictures.src AS image, items.category, items.notes, pictures.id AS picture_id
-            FROM items
-            JOIN pictures ON items.picture_id = pictures.id
-            WHERE items.expiry_date BETWEEN ? AND ?
-        ''' """
 
         query = '''
             SELECT items.id AS item_id, items.name, items.expiry_date, pictures.src AS image, items.category, items.notes, pictures.id AS picture_id
