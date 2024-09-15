@@ -102,9 +102,20 @@ def date_filtered_items(connection: Connection) -> Items:
         return Items(items=items_list)
 
 
-if __name__ == "__main__":
+def clear_table(connection: Connection, table: str):
+    with connection:
+        cur = connection.cursor()
+        cur.execute(
+            f'''
+            DELETE FROM {table}
+            '''
+        )
+
+
+""" if __name__ == "__main__":
     connection = sqlite3.connect("./database/food.db")
     # test_item = ItemModel(name="Pydantic", expiry_date=datetime.now(), image="test", category="test_tag", notes="Buy more"
     #                      )
     # insert_item(connection, test_item)
     # print(get_items(connection))
+ """

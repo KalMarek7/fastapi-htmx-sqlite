@@ -1,21 +1,24 @@
-from database import insert_image, get_images, update_image, insert_item, get_items, date_filtered_items
-from models import Items, ItemModel, UploadItem
+from database import insert_image, get_images, update_image, insert_item, get_items, date_filtered_items, clear_table
+from models import User, Token, Items, ItemModel, UploadItem
 from send import send_email
 from typing import List
 import base64
-from fastapi import FastAPI, File, UploadFile, Form
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
+from fastapi.security import OAuth2PasswordBearer
 from sqlite3 import Connection, Row
 from datetime import date
 import os
+
+
+app = FastAPI()
 
 USERNAME = os.getenv("USERNAME", "not_set")
 PASSWORD = os.getenv("PASSWORD", "not_set")
 EMAIL = os.getenv("EMAIL", "not_set")
 
-app = FastAPI()
 connection = Connection("./database/food.db")
 connection.row_factory = Row
 
@@ -129,3 +132,9 @@ async def date_filtered_images(request: Request):
             "password": f"{PASSWORD}"
         })
         return {"message": "success"}
+
+
+@app.get("/api/v1/clear/{table}")
+async def cps(request: Request, table: str):
+    clear_table(connection, table)
+    return {"message": "success"}

@@ -1,29 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-100">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Upload</title>
+        <title>File Upload</title>
+        <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    <body>
-        <a href="/">Home</a>
-        <form
-            hx-post="/api/v1/images"
-            hx-trigger="submit"
-            enctype="multipart/form-data"
-            hx-target="#image-cnt"
-            hx-swap="innerHTML"
+    <body class="h-full flex flex-col items-center">
+        <div
+            class="max-w-md w-full space-y-8 p-8 bg-white shadow-lg rounded-lg"
         >
-            <label>Image</label>
-            <input type="file" name="file" multiple />
-            <input type="submit" />
-        </form>
+            <div>
+                <h2
+                    class="mt-6 text-center text-3xl font-extrabold text-gray-900"
+                >
+                    File Upload
+                </h2>
+                <p class="mt-2 text-center text-sm text-gray-600">
+                    <a
+                        href="/"
+                        class="font-medium text-indigo-600 hover:text-indigo-500"
+                    >
+                        Back to Home
+                    </a>
+                </p>
+            </div>
+            <form
+                hx-post="/api/v1/images"
+                hx-trigger="submit"
+                enctype="multipart/form-data"
+                hx-target="#image-cnt"
+                hx-swap="innerHTML"
+                class="mt-8 space-y-6"
+            >
+                <div class="rounded-md shadow-sm -space-y-px">
+                    <div>
+                        <label for="file-upload" class="sr-only"
+                            >Choose file(s)</label
+                        >
+                        <input
+                            id="file-upload"
+                            name="file"
+                            type="file"
+                            multiple
+                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                            placeholder="Choose file(s)"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <button
+                        type="submit"
+                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                        Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <div
             id="image-cnt"
             hx-trigger="load"
             hx-get="/api/v1/images"
             hx-swap="innerHTML"
-        ></div>
-        <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+            class="mt-8 max-w-md w-full bg-white shadow-lg rounded-lg p-6"
+        >
+            <h3 class="text-lg font-medium text-gray-900 mb-4">
+                Uploaded Images
+            </h3>
+            <!-- Images will be loaded here -->
+        </div>
     </body>
 </html>

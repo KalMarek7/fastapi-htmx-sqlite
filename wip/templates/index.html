@@ -4,6 +4,10 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>poc</title>
+        <link
+            href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+            rel="stylesheet"
+        />
     </head>
     <body>
         <h1>Welcome</h1>
@@ -30,6 +34,7 @@
             hx-trigger="load"
             hx-get="/api/v1/items"
             hx-swap="innerHTML"
+            class="flex"
         ></div>
         <script src="https://unpkg.com/htmx.org@2.0.2"></script>
         <!-- <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script> -->
