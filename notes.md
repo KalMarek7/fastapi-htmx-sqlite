@@ -21,6 +21,7 @@ FOREIGN KEY (picture_id) REFERENCES pictures(id) -- Foreign key constraint
 
 return cur.lastrowid # Get the id of the inserted row
 
-# TODO need to be able to get/pass id
 
+https://daisyui.com/components/navbar/
+https://daisyui.com/components/file-input/
 ```
