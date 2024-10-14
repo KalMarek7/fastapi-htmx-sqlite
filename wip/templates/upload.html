@@ -59,16 +59,14 @@
             </form>
         </div>
 
+        <h3 class="text-lg font-medium text-white mt-4">Uploaded Images</h3>
         <div
             id="image-cnt"
             hx-trigger="load"
             hx-get="/api/v1/images"
             hx-swap="innerHTML"
-            class="mt-8 max-w-md w-full bg-white shadow-lg rounded-lg p-6"
+            class="mt-2 max-w-md w-ful shadow-lg rounded-lg p-6 text-white"
         >
-            <h3 class="text-lg font-medium text-gray-900 mb-4">
-                Uploaded Images
-            </h3>
             <!-- Images will be loaded here -->
         </div>
     </body>

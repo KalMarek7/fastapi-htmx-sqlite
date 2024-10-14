@@ -1,5 +1,5 @@
 {% for img in images %} {% if img.initial %}
-<div id="image-{{ img.id }}">
+<div id="image-{{ img.id }}" class="mb-6">
     <h1>Filename: {{ img.filename }}</h1>
     <p>Filesize: {{ img.filesize }}</p>
     <img src="data:image/png;base64,{{ img.src }}" alt="Embedded Image" />
@@ -9,7 +9,7 @@
         hx-trigger="click"
         hx-target="#image-{{ img.id }}"
         hx-swap="afterend"
-        class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105"
         onclick="this.classList.add('hidden')"
     >
         Edit info

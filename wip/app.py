@@ -9,7 +9,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlite3 import Connection, Row
-from datetime import date
+from datetime import date, datetime
 import os
 
 
@@ -95,6 +95,7 @@ async def edit_item(
     item = ItemModel(
         name=name,
         expiry_date=date.fromisoformat(expiry_date),
+        created_date=datetime.now().date(),
         picture_id=id,
         category=category,
         notes=notes,

@@ -10,7 +10,7 @@ def get_items(connection: Connection) -> Items:
         cur = connection.cursor()
         cur.execute(
             '''
-            SELECT items.id AS item_id, items.name, items.expiry_date, pictures.src AS image, items.category, items.notes, pictures.id AS picture_id
+            SELECT items.id AS item_id, items.name, items.expiry_date, items.created_date, pictures.src AS image, items.category, items.notes, pictures.id AS picture_id
             FROM items
             JOIN pictures ON items.picture_id = pictures.id;
             '''
@@ -27,9 +27,9 @@ def insert_item(connection: Connection, item: ItemModel):
         # print(item)
         cur.execute(
             '''
-            INSERT INTO items(name, expiry_date, picture_id, category, notes)
+            INSERT INTO items(name, expiry_date, created_date, picture_id, category, notes)
             VALUES
-            (:name, :expiry_date, :picture_id, :category, :notes)
+            (:name, :expiry_date, :created_date, :picture_id, :category, :notes)
             ''',
             item.model_dump()
         )
@@ -88,7 +88,7 @@ def date_filtered_items(connection: Connection) -> Items:
         print(delta)
 
         query = '''
-            SELECT items.id AS item_id, items.name, items.expiry_date, pictures.src AS image, items.category, items.notes, pictures.id AS picture_id
+            SELECT items.id AS item_id, items.name, items.expiry_date, items.created_date, pictures.src AS image, items.category, items.notes, pictures.id AS picture_id
             FROM items
             JOIN pictures ON items.picture_id = pictures.id
             WHERE items.expiry_date BETWEEN ? AND ?
