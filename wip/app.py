@@ -1,4 +1,4 @@
-from database import insert_image, get_images, update_image, insert_item, get_items, date_filtered_items, clear_table
+from database import insert_image, get_images, update_image, insert_item, get_items, date_filtered_items, search_items, clear_table
 from models import User, Token, Items, ItemModel, UploadItem
 from send import send_email
 from typing import List
@@ -133,6 +133,15 @@ async def date_filtered_images(request: Request):
             "password": f"{PASSWORD}"
         })
         return {"message": "success"}
+
+
+@app.post("/api/v1/search")
+async def search(request: Request, search: str = Form(...)) -> HTMLResponse:
+    # print(search)
+    items = search_items(connection, search)
+    if items.model_dump()["items"] == []:
+        return HTMLResponse(content="<p>No items found</p>")
+    return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
 
 
 @app.get("/api/v1/clear/{table}")

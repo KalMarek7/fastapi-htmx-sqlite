@@ -43,6 +43,41 @@
                 Send email
             </button>
         </div>
+        <form
+            hx-post="/api/v1/search"
+            hx-trigger="submit"
+            hx-target="#item-cnt"
+            hx-swap="innerHTML"
+            onsubmit="document.getElementById('clear-search').classList.remove('hidden')"
+        >
+            <button
+                type="button"
+                id="clear-search"
+                class="hidden mr-4 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:shadow-outline"
+                hx-get="/api/v1/items"
+                hx-trigger="click"
+                hx-target="#item-cnt"
+                hx-swap="innerHTML"
+                onclick="this.classList.add('hidden'); document.getElementById('search').value = ''; document.getElementById('search').focus()"
+            >
+                X
+            </button>
+            <input
+                type="text"
+                name="search"
+                id="search"
+                placeholder="Search..."
+                class="text-black border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:shadow-outline"
+                required
+            />
+            <button
+                type="submit"
+                class="ml-4 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:shadow-outline"
+            >
+                Search
+            </button>
+        </form>
+
         <div
             id="item-cnt"
             hx-trigger="load"
