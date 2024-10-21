@@ -25,3 +25,11 @@ return cur.lastrowid # Get the id of the inserted row
 https://daisyui.com/components/navbar/
 https://daisyui.com/components/file-input/
 ```
+
+-   Ability to edit items
+-   Highlight already expired items
+-   Handle image upload success somehow instead of message: success
+-   Recurring scan of items to send an email with items about to expire
+-   Basic auth - look into nginx browser login thingy
+-   Refactor endpoints (https://dev.to/msnmongare/best-practices-for-naming-api-endpoints-2n5o?ref=dailydev)
+-   Style UI from scratch

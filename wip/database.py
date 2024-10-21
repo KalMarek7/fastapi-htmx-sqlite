@@ -125,6 +125,18 @@ def clear_table(connection: Connection, table: str):
         )
 
 
+def delete_item(connection: Connection, id: int):
+    with connection:
+        cur = connection.cursor()
+        cur.execute(
+            f'''
+            DELETE FROM items
+            WHERE id = :id
+            ''',
+            {'id': id}
+        )
+
+
 """ if __name__ == "__main__":
     connection = sqlite3.connect("./database/food.db")
     # test_item = ItemModel(name="Pydantic", expiry_date=datetime.now(), image="test", category="test_tag", notes="Buy more"
