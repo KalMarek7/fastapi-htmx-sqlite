@@ -1,9 +1,9 @@
-from database import insert_image, get_images, update_image, insert_item, get_items, date_filtered_items, search_items, delete_item, clear_table
+from database import insert_image, get_images, update_image, insert_item, get_items, date_filtered_items, search_items, delete_item, get_item, update_item, clear_table
 from models import User, Token, Items, ItemModel, UploadItem
 from send import send_email
 from typing import List
 import base64
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends, Query
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
@@ -38,8 +38,11 @@ async def upload_site(request: Request) -> HTMLResponse:
 
 
 @app.get("/api/v1/items")
-async def fetch_items(request: Request) -> HTMLResponse:
-    items = get_items(connection)
+async def fetch_items(request: Request, id: int = Query(None)) -> HTMLResponse:
+    if not id:
+        items = get_items(connection)
+    else:
+        items = get_item(connection, id)
     # print(items)
     return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
 
@@ -149,6 +152,31 @@ async def delete(request: Request, id: int) -> HTMLResponse:
     delete_item(connection, id)
     items = get_items(connection)
     return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
+
+
+@app.get("/api/v1/item/{id}")
+async def fetch_item(request: Request, id: int, action: str = Query(None)) -> HTMLResponse:
+    if action == "edit":
+        item = get_item(connection, id)
+        return templates.TemplateResponse(request, "./edit_item.html", context=item.model_dump())
+    else:
+        item = get_item(connection, id)
+        return templates.TemplateResponse(request, "./items.html", context=item.model_dump())
+
+
+@app.patch("/api/v1/item/{id}")
+async def patch_item(
+        id: int,
+        request: Request,
+        name: str = Form(...),
+        expiry_date: str = Form(...),
+        category: str = Form(None),
+        notes: str = Form(None)
+):
+    update_item(connection, id=id, name=name, expiry_date=expiry_date,
+                category=category, notes=notes)
+    item = get_item(connection, id)
+    return templates.TemplateResponse(request, "./items.html", context=item.model_dump())
 
 
 @app.get("/api/v1/clear/{table}")

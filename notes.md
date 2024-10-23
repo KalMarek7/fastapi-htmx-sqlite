@@ -26,7 +26,7 @@ https://daisyui.com/components/navbar/
 https://daisyui.com/components/file-input/
 ```
 
--   Ability to edit items
+-   Ability to edit items (add close button and patch to a form)
 -   Highlight already expired items
 -   Handle image upload success somehow instead of message: success
 -   Recurring scan of items to send an email with items about to expire

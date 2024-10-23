@@ -1,84 +1,93 @@
-<div class="flex flex-wrap justify-center">
-    {% for item in items %}
-    <div
-        id="item-{{ item.item_id }}"
-        class="w-full max-w-sm bg-gray-800 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-    >
-        <div class="p-5">
-            <div class="flex justify-between items-center">
-                <h5
-                    class="mb-4 text-2xl font-bold tracking-tight text-gray-200 dark:text-white"
-                >
-                    {{ item.name }}
-                </h5>
-                <button
-                    type="button"
-                    id="delete-item"
-                    class="bg-red-700 mr-4 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:shadow-outline"
-                    hx-delete="/api/v1/delete/{{ item.item_id }}"
-                    hx-target="#item-{{ item.item_id }}"
-                    hx-swap="delete"
-                    hx-trigger="click"
-                >
-                    X
-                </button>
-            </div>
-            <div class="flex mb-4">
-                <span
-                    class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300"
-                >
-                    {{ item.category }}
-                </span>
-            </div>
-            <div class="aspect-square relative mb-4">
-                <img
-                    class="object-cover rounded-md w-full h-full"
-                    src="data:image/png;base64,{{ item.image }}"
-                    alt="Granny Smith Apple"
-                />
-            </div>
-            <div
-                class="flex items-center space-x-2 text-sm text-gray-200 dark:text-gray-400 mb-4"
+{% for item in items %}
+<div
+    id="item-{{ item.item_id }}"
+    class="w-full max-w-sm bg-gray-800 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+>
+    <div class="p-5">
+        <div class="flex justify-between items-center">
+            <button
+                type="button"
+                id="edit-item"
+                class="bg-blue-700 mr-4 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:shadow-outline"
+                hx-get="/api/v1/item/{{ item.item_id }}?action=edit"
+                hx-trigger="click"
+                hx-target="#item-{{ item.item_id }}"
+                hx-swap="innerHTML"
             >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="w-4 h-4"
-                >
-                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-                    <line x1="16" x2="16" y1="2" y2="6" />
-                    <line x1="8" x2="8" y1="2" y2="6" />
-                    <line x1="3" x2="21" y1="10" y2="10" />
-                    <path d="M8 14h.01" />
-                    <path d="M12 14h.01" />
-                    <path d="M16 14h.01" />
-                    <path d="M8 18h.01" />
-                    <path d="M12 18h.01" />
-                    <path d="M16 18h.01" />
-                </svg>
-                <span>Expires: {{ item.expiry_date }}</span>
-            </div>
-            <div class="mb-4">
-                <h3 class="font-semibold mb-2 text-gray-200 dark:text-white">
-                    Notes:
-                </h3>
-                <p class="text-sm text-gray-300 dark:text-gray-400">
-                    {{ item.notes }}
-                </p>
-            </div>
+                Edit
+            </button>
+            <button
+                type="button"
+                id="delete-item"
+                class="bg-red-700 mr-4 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:shadow-outline"
+                hx-delete="/api/v1/delete/{{ item.item_id }}"
+                hx-target="#item-{{ item.item_id }}"
+                hx-swap="delete"
+                hx-trigger="click"
+            >
+                X
+            </button>
         </div>
-        <div class="px-5 pb-5">
-            <p class="text-xs text-gray-300 dark:text-gray-400">
-                Added to inventory: {{ item.created_date }}
+        <h5
+            class="mb-4 text-2xl font-bold tracking-tight text-gray-200 dark:text-white"
+        >
+            {{ item.name }}
+        </h5>
+        <div class="flex mb-4">
+            <span
+                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300"
+            >
+                {{ item.category }}
+            </span>
+        </div>
+        <div class="aspect-square relative mb-4">
+            <img
+                class="object-cover rounded-md w-full h-full"
+                src="data:image/png;base64,{{ item.image }}"
+                alt="Granny Smith Apple"
+            />
+        </div>
+        <div
+            class="flex items-center space-x-2 text-sm text-gray-200 dark:text-gray-400 mb-4"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="w-4 h-4"
+            >
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                <line x1="16" x2="16" y1="2" y2="6" />
+                <line x1="8" x2="8" y1="2" y2="6" />
+                <line x1="3" x2="21" y1="10" y2="10" />
+                <path d="M8 14h.01" />
+                <path d="M12 14h.01" />
+                <path d="M16 14h.01" />
+                <path d="M8 18h.01" />
+                <path d="M12 18h.01" />
+                <path d="M16 18h.01" />
+            </svg>
+            <span>Expires: {{ item.expiry_date }}</span>
+        </div>
+        <div class="mb-4">
+            <h3 class="font-semibold mb-2 text-gray-200 dark:text-white">
+                Notes:
+            </h3>
+            <p class="text-sm text-gray-300 dark:text-gray-400">
+                {{ item.notes }}
             </p>
         </div>
     </div>
-    {% endfor %}
+    <div class="px-5 pb-5">
+        <p class="text-xs text-gray-300 dark:text-gray-400">
+            Added to inventory: {{ item.created_date }}
+        </p>
+    </div>
 </div>
+{% endfor %}

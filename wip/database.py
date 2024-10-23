@@ -125,6 +125,54 @@ def clear_table(connection: Connection, table: str):
         )
 
 
+def get_item(connection: Connection, id: int) -> Items:
+    with connection:
+        cur = connection.cursor()
+        cur.execute(
+            '''
+            SELECT items.id AS item_id, items.name, items.expiry_date, items.created_date, pictures.src AS image, items.category, items.notes, pictures.id AS picture_id
+            FROM items
+            JOIN pictures ON items.picture_id = pictures.id
+            WHERE items.id = :id
+            ''',
+            {'id': id}
+        )
+        item = ItemModel(**dict(cur.fetchone()))
+        # It needs to be returned as a list to work with the rest of the app
+        return Items(items=[item])
+
+
+def update_item(connection: Connection, id: int, name: str, expiry_date: str, category: str, notes: str):
+    expiry_date_fmt = datetime.strptime(expiry_date, '%Y-%m-%d').date()
+    existing_item = get_item(connection, id).model_dump()
+    # print(existing_item)
+    # If category or notes None then take the values from existing_item
+    if category is None:
+        category = existing_item["items"][0]["category"]
+    if notes is None:
+        notes = existing_item["items"][0]["notes"]
+    updated_item = ItemModel(
+        name=name,
+        expiry_date=expiry_date_fmt,
+        category=category,
+        notes=notes,
+        item_id=id,
+        created_date=existing_item["items"][0]["created_date"],
+        picture_id=existing_item["items"][0]["picture_id"]
+
+    )
+    with connection:
+        cur = connection.cursor()
+        cur.execute(
+            '''
+            UPDATE items
+            SET name = :name, expiry_date = :expiry_date, category = :category, notes = :notes
+            WHERE id = :item_id
+            ''',
+            updated_item.model_dump()
+        )
+
+
 def delete_item(connection: Connection, id: int):
     with connection:
         cur = connection.cursor()
