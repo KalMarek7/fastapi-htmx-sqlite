@@ -73,7 +73,10 @@
                 <path d="M12 18h.01" />
                 <path d="M16 18h.01" />
             </svg>
-            <span>Expires: {{ item.expiry_date }}</span>
+            <span
+                class="{% if item | days_until_expiry < 3 %}text-red-500{% else %}{% endif %}"
+                >Expires: {{ item.expiry_date }}</span
+            >
         </div>
         <div class="mb-4">
             <h3 class="font-semibold mb-2 text-gray-200 dark:text-white">

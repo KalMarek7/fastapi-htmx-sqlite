@@ -22,29 +22,37 @@ EMAIL = os.getenv("EMAIL", "not_set")
 connection = Connection("./database/food.db")
 connection.row_factory = Row
 
+
+def days_until_expiry(item: dict) -> int:
+    return (item["expiry_date"] - date.today()).days
+
+
 templates = Jinja2Templates(directory="templates")
+templates.env.filters["days_until_expiry"] = days_until_expiry
+# print(templates.env.filters)
+# print(templates.env.filters["days_until_expiry"])
 
 
-@app.get("/")
+@ app.get("/")
 async def root(request: Request) -> HTMLResponse:
     # items = get_images(connection)
     return templates.TemplateResponse(request, "./index.html")
 
 
-@app.get("/upload")
+@ app.get("/upload")
 async def upload_site(request: Request) -> HTMLResponse:
     # items = get_images(connection)
     return templates.TemplateResponse(request, "./upload.html")
 
 
-@app.get("/api/v1/items")
+@ app.get("/api/v1/items")
 async def fetch_items(request: Request, id: int = Query(None)) -> HTMLResponse:
     if not id:
         items = get_items(connection)
     else:
         items = get_item(connection, id)
     # print(items)
-    return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
+    return templates.TemplateResponse(request, "/items.html", context=items.model_dump())
 
 
 """ @app.post("/api/v1/item")
@@ -56,7 +64,7 @@ async def add_item(request: Request, item: ItemModel) -> HTMLResponse:
     return templates.TemplateResponse(request, "./items.html", context=items.model_dump()) """
 
 
-@app.post("/api/v1/images")
+@ app.post("/api/v1/images")
 async def upload(request: Request, file: List[UploadFile] = File(...)) -> HTMLResponse:
     for i in file:
         file_content = await i.read()
@@ -72,19 +80,19 @@ async def upload(request: Request, file: List[UploadFile] = File(...)) -> HTMLRe
     return templates.TemplateResponse(request, "./image.html", context=images.model_dump())
 
 
-@app.get("/api/v1/images")
+@ app.get("/api/v1/images")
 async def fetch_images(request: Request) -> HTMLResponse:
     images = get_images(connection)
     return templates.TemplateResponse(request, "./image.html", context=images.model_dump())
 
 
-@app.get("/api/v1/edit_image/{id}")
+@ app.get("/api/v1/edit_image/{id}")
 async def start_edit(request: Request, id: int) -> HTMLResponse:
     # print(request.json)
     return templates.TemplateResponse(request, "./edit.html", context={"id": id})
 
 
-@app.post("/api/v1/edit_image/{id}")
+@ app.post("/api/v1/edit_image/{id}")
 async def edit_item(
         request: Request,
         id: int,
@@ -110,7 +118,7 @@ async def edit_item(
     return {"message": "success"}
 
 
-@app.get("/api/v1/date_filtered_items")
+@ app.get("/api/v1/date_filtered_items")
 async def date_filtered_images(request: Request):
     items = date_filtered_items(connection)
     items_dict = items.model_dump()
@@ -138,7 +146,7 @@ async def date_filtered_images(request: Request):
         return {"message": "success"}
 
 
-@app.post("/api/v1/search")
+@ app.post("/api/v1/search")
 async def search(request: Request, search: str = Form(...)) -> HTMLResponse:
     # print(search)
     items = search_items(connection, search)
@@ -147,14 +155,14 @@ async def search(request: Request, search: str = Form(...)) -> HTMLResponse:
     return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
 
 
-@app.delete("/api/v1/delete/{id}")
+@ app.delete("/api/v1/delete/{id}")
 async def delete(request: Request, id: int) -> HTMLResponse:
     delete_item(connection, id)
     items = get_items(connection)
     return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
 
 
-@app.get("/api/v1/item/{id}")
+@ app.get("/api/v1/item/{id}")
 async def fetch_item(request: Request, id: int, action: str = Query(None)) -> HTMLResponse:
     if action == "edit":
         item = get_item(connection, id)
@@ -164,7 +172,7 @@ async def fetch_item(request: Request, id: int, action: str = Query(None)) -> HT
         return templates.TemplateResponse(request, "./items.html", context=item.model_dump())
 
 
-@app.patch("/api/v1/item/{id}")
+@ app.patch("/api/v1/item/{id}")
 async def patch_item(
         id: int,
         request: Request,
@@ -179,7 +187,7 @@ async def patch_item(
     return templates.TemplateResponse(request, "./items.html", context=item.model_dump())
 
 
-@app.get("/api/v1/clear/{table}")
+@ app.get("/api/v1/clear/{table}")
 async def cps(request: Request, table: str):
     clear_table(connection, table)
     return {"message": "success"}

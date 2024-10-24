@@ -24,12 +24,13 @@ return cur.lastrowid # Get the id of the inserted row
 
 https://daisyui.com/components/navbar/
 https://daisyui.com/components/file-input/
+https://merakiui.com/components/application-ui/cards
 ```
 
--   Ability to edit items (add close button and patch to a form)
--   Highlight already expired items
+-   [x] Ability to edit items (add close button and patch to a form)
+-   [x] Conditionally render expiry date's color
 -   Handle image upload success somehow instead of message: success
 -   Recurring scan of items to send an email with items about to expire
--   Basic auth - look into nginx browser login thingy
 -   Refactor endpoints (https://dev.to/msnmongare/best-practices-for-naming-api-endpoints-2n5o?ref=dailydev)
 -   Style UI from scratch
+-   Basic auth - look into nginx browser login thingy
