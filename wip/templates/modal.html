@@ -1,0 +1,23 @@
+<div
+    id="popup-{{ id }}"
+    class="bg-gray-800 rounded-lg shadow-lg p-6 max-w-sm w-full"
+>
+    <h2 class="text-xl font-bold mb-4 text-gray-100">
+        Item added successfully
+    </h2>
+    <button
+        id="closeButton-{{ id }}"
+        type="button"
+        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 w-full transition duration-150 ease-in-out"
+    >
+        Close
+    </button>
+</div>
+
+<script>
+    document
+        .getElementById("closeButton-{{ id }}")
+        .addEventListener("click", () => {
+            document.getElementById("popup-{{ id }}").style.display = "none";
+        });
+</script>

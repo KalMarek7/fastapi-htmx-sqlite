@@ -101,7 +101,7 @@ async def edit_item(
         picture_id: int = Form(...),
         category: str = Form(None),
         notes: str = Form(None)
-) -> dict:
+) -> HTMLResponse:
 
     item = ItemModel(
         name=name,
@@ -115,7 +115,7 @@ async def edit_item(
     # print("HAA", item)
     insert_item(connection, item)
     update_image(connection, id)
-    return {"message": "success"}
+    return templates.TemplateResponse(request, "./modal.html", context={"id": id})
 
 
 @ app.get("/api/v1/date_filtered_items")
