@@ -10,22 +10,27 @@ from fastapi.requests import Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security.api_key import APIKeyHeader
 from starlette.status import HTTP_403_FORBIDDEN
-
 from sqlite3 import Connection, Row
 from datetime import date, datetime
 import os
 import secrets
 
-app = FastAPI()
-
+USERNAME = os.getenv("USERNAME", "not_set")
+PASSWORD = os.getenv("PASSWORD", "not_set")
+EMAIL = os.getenv("EMAIL", "not_set")
 
 API_KEY_NAME = "X-API-Key"
 API_KEY = secrets.token_urlsafe(32)
 print(API_KEY)
-
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 
-# Dependency function to validate the API key
+
+def days_until_expiry(item: dict) -> int:
+    return (item["expiry_date"] - date.today()).days
+
+
+templates = Jinja2Templates(directory="templates")
+templates.env.filters["days_until_expiry"] = days_until_expiry
 
 
 async def get_api_key(api_key_header: str = Security(api_key_header)):
@@ -40,22 +45,9 @@ async def get_api_key(api_key_header: str = Security(api_key_header)):
     return api_key_header
 
 
-USERNAME = os.getenv("USERNAME", "not_set")
-PASSWORD = os.getenv("PASSWORD", "not_set")
-EMAIL = os.getenv("EMAIL", "not_set")
-
+app = FastAPI()
 connection = Connection("./database/food.db")
 connection.row_factory = Row
-
-
-def days_until_expiry(item: dict) -> int:
-    return (item["expiry_date"] - date.today()).days
-
-
-templates = Jinja2Templates(directory="templates")
-templates.env.filters["days_until_expiry"] = days_until_expiry
-# print(templates.env.filters)
-# print(templates.env.filters["days_until_expiry"])
 
 
 @ app.get("/restricted")
@@ -86,13 +78,10 @@ async def fetch_items(request: Request, id: int = Query(None)) -> HTMLResponse:
     return templates.TemplateResponse(request, "/items.html", context=items.model_dump())
 
 
-""" @app.post("/api/v1/item")
-async def add_item(request: Request, item: ItemModel) -> HTMLResponse:
-    print(item)
-    print(await request.json())
-    insert_item(connection, item)
-    items = get_items(connection)
-    return templates.TemplateResponse(request, "./items.html", context=items.model_dump()) """
+@ app.get("/api/v1/images")
+async def fetch_images(request: Request) -> HTMLResponse:
+    images = get_images(connection)
+    return templates.TemplateResponse(request, "./image.html", context=images.model_dump())
 
 
 @ app.post("/api/v1/images")
@@ -111,19 +100,13 @@ async def upload(request: Request, file: List[UploadFile] = File(...)) -> HTMLRe
     return templates.TemplateResponse(request, "./image.html", context=images.model_dump())
 
 
-@ app.get("/api/v1/images")
-async def fetch_images(request: Request) -> HTMLResponse:
-    images = get_images(connection)
-    return templates.TemplateResponse(request, "./image.html", context=images.model_dump())
-
-
 @ app.get("/api/v1/edit_image/{id}")
 async def start_edit(request: Request, id: int) -> HTMLResponse:
     # print(request.json)
     return templates.TemplateResponse(request, "./edit.html", context={"id": id})
 
 
-@ app.post("/api/v1/edit_image/{id}")
+@ app.put("/api/v1/edit_image/{id}")
 async def edit_item(
         request: Request,
         id: int,

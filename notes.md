@@ -32,6 +32,6 @@ https://merakiui.com/components/application-ui/cards
 -   [x] Handle image upload success somehow instead of message: success
 -   Maybe add proper form on upload image so no edit image is required?
 -   [x] (use existing "/api/v1/date_filtered_items" endpoint through cron job?) Recurring scan of items to send an email with items about to expire
--   Refactor endpoints (https://dev.to/msnmongare/best-practices-for-naming-api-endpoints-2n5o?ref=dailydev)
--   Style UI from scratch
+-   [x] Refactor endpoints (https://dev.to/msnmongare/best-practices-for-naming-api-endpoints-2n5o?ref=dailydev)
+-   Install tailwind and style UI from scratch
 -   [x] Secure api key header for all requests as access restriction measure
