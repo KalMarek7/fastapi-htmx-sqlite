@@ -3,17 +3,42 @@ from models import User, Token, Items, ItemModel, UploadItem
 from send import send_email
 from typing import List
 import base64
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends, Query
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends, Query, Security
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
 from fastapi.security import OAuth2PasswordBearer
+from fastapi.security.api_key import APIKeyHeader
+from starlette.status import HTTP_403_FORBIDDEN
+
 from sqlite3 import Connection, Row
 from datetime import date, datetime
 import os
-
+import secrets
 
 app = FastAPI()
+
+
+API_KEY_NAME = "X-API-Key"
+API_KEY = secrets.token_urlsafe(32)
+print(API_KEY)
+
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+# Dependency function to validate the API key
+
+
+async def get_api_key(api_key_header: str = Security(api_key_header)):
+    if api_key_header is None:
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN, detail="API Key header missing"
+        )
+    if api_key_header != API_KEY:
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN, detail="Invalid API Key"
+        )
+    return api_key_header
+
 
 USERNAME = os.getenv("USERNAME", "not_set")
 PASSWORD = os.getenv("PASSWORD", "not_set")
@@ -31,6 +56,12 @@ templates = Jinja2Templates(directory="templates")
 templates.env.filters["days_until_expiry"] = days_until_expiry
 # print(templates.env.filters)
 # print(templates.env.filters["days_until_expiry"])
+
+
+@ app.get("/restricted")
+async def rest(request: Request, api_key: str = Depends(get_api_key)) -> HTMLResponse:
+    # items = get_images(connection)
+    return templates.TemplateResponse(request, "./index.html")
 
 
 @ app.get("/")

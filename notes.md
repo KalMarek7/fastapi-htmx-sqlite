@@ -31,7 +31,7 @@ https://merakiui.com/components/application-ui/cards
 -   [x] Conditionally render expiry date's color
 -   [x] Handle image upload success somehow instead of message: success
 -   Maybe add proper form on upload image so no edit image is required?
--   Recurring scan of items to send an email with items about to expire
+-   [x] (use existing "/api/v1/date_filtered_items" endpoint through cron job?) Recurring scan of items to send an email with items about to expire
 -   Refactor endpoints (https://dev.to/msnmongare/best-practices-for-naming-api-endpoints-2n5o?ref=dailydev)
 -   Style UI from scratch
--   Basic auth - look into nginx browser login thingy
+-   [x] Secure api key header for all requests as access restriction measure
