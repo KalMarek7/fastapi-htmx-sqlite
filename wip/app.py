@@ -9,6 +9,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security.api_key import APIKeyHeader
+from fastapi.staticfiles import StaticFiles
 from starlette.status import HTTP_403_FORBIDDEN
 from sqlite3 import Connection, Row
 from datetime import date, datetime
@@ -46,6 +47,7 @@ async def get_api_key(api_key_header: str = Security(api_key_header)):
 
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 connection = Connection("./database/food.db")
 connection.row_factory = Row
 

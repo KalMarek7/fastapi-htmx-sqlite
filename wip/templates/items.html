@@ -1,41 +1,39 @@
 {% for item in items %}
-<div
-    id="item-{{ item.item_id }}"
-    class="w-full max-w-sm bg-gray-800 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
->
-    <div class="p-5">
+<div id="item-{{ item.item_id }}" class="w-full max-w-sm rounded-lg shadow">
+    <div class="p-5 bg-[#1b1512] rounded">
         <div class="flex justify-between items-center">
-            <button
-                type="button"
-                id="edit-item"
-                class="bg-blue-700 mr-4 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:shadow-outline"
-                hx-get="/api/v1/item/{{ item.item_id }}?action=edit"
-                hx-trigger="click"
-                hx-target="#item-{{ item.item_id }}"
-                hx-swap="innerHTML"
-            >
-                Edit
-            </button>
-            <button
-                type="button"
-                id="delete-item"
-                class="bg-red-700 mr-4 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:shadow-outline"
-                hx-delete="/api/v1/delete/{{ item.item_id }}"
-                hx-target="#item-{{ item.item_id }}"
-                hx-swap="delete"
-                hx-trigger="click"
-            >
-                X
-            </button>
+            <h5 class="mb-4 text-2xl font-bold tracking-tight text-[#d4c3bc]">
+                {{ item.name }}
+            </h5>
+            <div class="flex items-center">
+                <button
+                    type="button"
+                    id="edit-item"
+                    class="bg-[#1a5f7a] hover:bg-[#1e7495] mr-4 rounded-md px-4 py-2 focus:outline-none focus:shadow-outline"
+                    hx-get="/api/v1/item/{{ item.item_id }}?action=edit"
+                    hx-trigger="click"
+                    hx-target="#item-{{ item.item_id }}"
+                    hx-swap="innerHTML"
+                >
+                    Edit
+                </button>
+                <button
+                    type="button"
+                    id="delete-item"
+                    class="bg-[#7a1a1a] hover:bg-[#951e1e] rounded-md px-4 py-2 focus:outline-none focus:shadow-outline"
+                    hx-delete="/api/v1/delete/{{ item.item_id }}"
+                    hx-target="#item-{{ item.item_id }}"
+                    hx-swap="delete"
+                    hx-trigger="click"
+                >
+                    X
+                </button>
+            </div>
         </div>
-        <h5
-            class="mb-4 text-2xl font-bold tracking-tight text-gray-200 dark:text-white"
-        >
-            {{ item.name }}
-        </h5>
+
         <div class="flex mb-4">
             <span
-                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300"
+                class="bg-[#3e2e25] text-[#b69c93] text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
             >
                 {{ item.category }}
             </span>
@@ -74,23 +72,19 @@
                 <path d="M16 18h.01" />
             </svg>
             <span
-                class="{% if item | days_until_expiry < 3 %}text-red-500{% else %}{% endif %}"
+                class="{% if item | days_until_expiry < 3 %}text-red-500{% else %}text-[#b69c93]{% endif %}"
                 >Expires: {{ item.expiry_date }}</span
             >
         </div>
         <div class="mb-4">
-            <h3 class="font-semibold mb-2 text-gray-200 dark:text-white">
-                Notes:
-            </h3>
-            <p class="text-sm text-gray-300 dark:text-gray-400">
-                {{ item.notes }}
+            <h3 class="font-semibold mb-1 text-[#d4c3bc]">Notes:</h3>
+            <p class="text-sm text-[#b69c93]">{{ item.notes }}</p>
+        </div>
+        <div class="">
+            <p class="text-xs text-[#8b6f62] text-right">
+                Added to inventory: {{ item.created_date }}
             </p>
         </div>
-    </div>
-    <div class="px-5 pb-5">
-        <p class="text-xs text-gray-300 dark:text-gray-400">
-            Added to inventory: {{ item.created_date }}
-        </p>
     </div>
 </div>
 {% endfor %}
