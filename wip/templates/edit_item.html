@@ -3,7 +3,7 @@
     hx-trigger="submit"
     hx-target="#item-{{ items[0].item_id }}"
     hx-swap="innerHTML"
-    class="px-8 pt-6 pb-8 mb-4 max-w-md mx-auto"
+    class="p-5 bg-[#1b1512] rounded"
 >
     <input
         type="number"
@@ -20,7 +20,7 @@
         />
     </div>
     <div class="mb-4">
-        <label for="name" class="block text-gray-300 text-sm font-bold mb-2"
+        <label for="name" class="block text-[#d4c3bc] text-sm font-bold mb-2"
             >Name</label
         >
         <input
@@ -29,12 +29,12 @@
             id="name"
             placeholder="{{ items[0].name }}"
             required
-            class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
+            class="w-full text-[#b69c93] bg-[#271c16] rounded-md px-3 py-2 focus:outline-none focus:shadow-outline placeholder:text-[#8b6f62]"
         />
     </div>
 
     <div class="mb-4">
-        <label for="expiry_date" class="text-gray-300 text-sm font-bold mb-2"
+        <label for="expiry_date" class="text-[#d4c3bc] text-sm font-bold mb-2"
             >Expiry date</label
         >
         <input
@@ -43,12 +43,14 @@
             id="expiry_date"
             placeholder="{{ items[0].expiry_date }}"
             required
-            class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
+            class="w-full text-[#b69c93] bg-[#271c16] rounded-md px-3 py-2 focus:outline-none focus:shadow-outline placeholder:text-[#8b6f62]"
         />
     </div>
 
     <div class="mb-4">
-        <label for="category" class="block text-gray-300 text-sm font-bold mb-2"
+        <label
+            for="category"
+            class="block text-[#d4c3bc] text-sm font-bold mb-2"
             >Category</label
         >
         <input
@@ -56,12 +58,12 @@
             name="category"
             id="category"
             placeholder="{{ items[0].category }}"
-            class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
+            class="w-full text-[#b69c93] bg-[#271c16] rounded-md px-3 py-2 focus:outline-none focus:shadow-outline placeholder:text-[#8b6f62]"
         />
     </div>
 
     <div class="mb-6">
-        <label for="notes" class="block text-gray-300 text-sm font-bold mb-2"
+        <label for="notes" class="block text-[#d4c3bc] text-sm font-bold mb-2"
             >Notes</label
         >
         <textarea
@@ -69,26 +71,26 @@
             id="notes"
             rows="3"
             placeholder="{{ items[0].notes }}"
-            class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
+            class="w-full text-[#b69c93] bg-[#271c16] rounded-md px-3 py-2 focus:outline-none focus:shadow-outline placeholder:text-[#8b6f62]"
         ></textarea>
     </div>
 
     <div class="flex items-center justify-between">
         <button
+            type="submit"
+            class="bg-[#1a5f7a] hover:bg-[#1e7495] mr-4 rounded-md px-4 py-2 focus:outline-none focus:shadow-outline"
+        >
+            Save
+        </button>
+        <button
             type="button"
-            class="bg-red-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105"
+            class="bg-[#7a1a1a] hover:bg-[#951e1e] rounded-md px-4 py-2 focus:outline-none focus:shadow-outline"
             hx-trigger="click"
             hx-get="/api/v1/items?id={{ items[0].item_id }}"
             hx-target="#item-{{ items[0].item_id }}"
             hx-swap="innerHTML"
         >
             Cancel
-        </button>
-        <button
-            type="submit"
-            class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105"
-        >
-            Save
         </button>
     </div>
 </form>
