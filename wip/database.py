@@ -63,6 +63,23 @@ def get_images(connection: Connection) -> Images:
         return Images(images=images_list)
 
 
+def get_image(connection: Connection, id: int) -> Images:
+    with connection:
+        cur = connection.cursor()
+        cur.execute(
+            '''
+            SELECT id, src, filename, filesize, initial
+            FROM
+            pictures
+            WHERE id = :id
+            ''',
+            {'id': id}
+        )
+        image = UploadItem(**dict(cur.fetchone()))
+        # It needs to be returned as a list to work with the rest of the app
+        return Images(images=[image])
+
+
 def update_image(connection: Connection, id: int):
     with connection:
         cur = connection.cursor()

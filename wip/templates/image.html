@@ -1,18 +1,26 @@
 {% for img in images %} {% if img.initial %}
-<div id="image-{{ img.id }}" class="mb-6">
-    <h1>Filename: {{ img.filename }}</h1>
-    <p>Filesize: {{ img.filesize }}</p>
-    <img src="data:image/png;base64,{{ img.src }}" alt="Embedded Image" />
-    <p>Initial: {{ img.initial }}</p>
-    <button
-        hx-get="/api/v1/edit_image/{{ img.id }}"
-        hx-trigger="click"
-        hx-target="#image-{{ img.id }}"
-        hx-swap="beforeend"
-        class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105"
-        onclick="this.classList.add('hidden')"
-    >
-        Edit info
-    </button>
+<div id="image-{{ img.id }}" class="text-[#d4c3bc] w-full max-w-sm">
+    <div class="bg-[#1b1512] p-5">
+        <h1><span class="font-bold">Filename:</span> {{ img.filename }}</h1>
+        <p><span class="font-bold">Filesize:</span> {{ img.filesize }}</p>
+        <div class="aspect-square relative my-3">
+            <img
+                class="object-cover rounded-md h-full w-full"
+                src="data:image/png;base64,{{ img.src }}"
+                alt="Embedded Image"
+            />
+        </div>
+        <!-- <p>Initial: {{ img.initial }}</p> -->
+        <button
+            hx-get="/api/v1/edit_image/{{ img.id }}"
+            hx-trigger="click"
+            hx-target="#image-{{ img.id }}"
+            hx-swap="beforeend"
+            class="bg-[#1a5f7a] hover:bg-[#1e7495] mr-4 rounded-md px-4 py-2 focus:outline-none focus:shadow-outline text-white"
+            onclick="this.classList.add('hidden')"
+        >
+            Edit info
+        </button>
+    </div>
 </div>
 {% endif %} {% endfor %}

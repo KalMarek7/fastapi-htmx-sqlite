@@ -1,71 +1,86 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-gray-800">
+<html lang="en" class="">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>File Upload</title>
+        <title>StockSaver | Image Upload</title>
         <script src="https://unpkg.com/htmx.org@2.0.2"></script>
-        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', path='css/output.css') }}"
+        />
     </head>
-    <body class="h-full flex flex-col items-center">
-        <div class="max-w-md w-full space-y-8 p-8 shadow-lg rounded-lg">
-            <div>
-                <h1
-                    class="text-center text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 sm:text-5xl md:text-6xl"
-                >
-                    Upload Image
-                </h1>
-                <p class="mt-2 text-center text-sm text-gray-600">
-                    <a
-                        href="/"
-                        class="font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                        Back to Home
-                    </a>
-                </p>
-            </div>
-            <form
-                hx-post="/api/v1/images"
-                hx-trigger="submit"
-                enctype="multipart/form-data"
-                hx-target="#image-cnt"
-                hx-swap="innerHTML"
-                class="mt-8 space-y-6"
+    <body class="h-full flex flex-col items-center bg-[#100e0d] p-4">
+        <header
+            class="flex justify-between w-full border-b border-[#271c16] mb-6"
+        >
+            <a
+                href="/"
+                class="text-[#d4c3bc] font-semibold hover:scale-105 mx-4 pb-4 pt-2 text-lg"
+                >Home</a
             >
-                <div class="rounded-md shadow-sm -space-y-px">
-                    <div>
-                        <label for="file-upload" class="sr-only"
-                            >Choose file(s)</label
-                        >
-                        <input
-                            id="file-upload"
-                            name="file"
-                            type="file"
-                            multiple
-                            class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
-                            required
-                        />
-                    </div>
-                </div>
-
+            <div class="flex items-center">
+                <a
+                    class="text-[#d4c3bc] hover:scale-105 mx-4 hover:cursor-pointer pb-4 pt-2"
+                    hx-get="/api/v1/date_filtered_items"
+                    hx-trigger="click"
+                    hx-target="#item-cnt"
+                    hx-swap="innerHTML"
+                    hx-headers='{"custom_format": "text/html"}'
+                >
+                    Soon expired
+                </a>
+                <a
+                    class="text-[#d4c3bc] hover:scale-105 mx-4 hover:cursor-pointer pb-4 pt-2"
+                    hx-get="/api/v1/date_filtered_items"
+                    hx-trigger="click"
+                    hx-target="#item-cnt"
+                    hx-swap="innerHTML"
+                >
+                    Send email
+                </a>
+            </div>
+        </header>
+        <form
+            hx-post="/api/v1/images"
+            hx-trigger="submit"
+            enctype="multipart/form-data"
+            hx-target="#image-cnt"
+            hx-swap="innerHTML"
+            class="space-y-6"
+        >
+            <div class="rounded-md shadow-sm -space-y-px">
                 <div>
-                    <button
-                        type="submit"
-                        class="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105"
+                    <label for="file-upload" class="sr-only"
+                        >Choose file(s)</label
                     >
-                        Upload
-                    </button>
+                    <input
+                        id="file-upload"
+                        name="file"
+                        type="file"
+                        multiple
+                        class="shadow appearance-none rounded-lg w-full py-3 px-4 leading-tight focus:outline-none focus:shadow-outline placeholder:text-[#8b6f62] text-[#b69c93] bg-[#271c16]"
+                        required
+                    />
                 </div>
-            </form>
-        </div>
+            </div>
 
-        <h3 class="text-lg font-medium text-white mt-4">Uploaded Images</h3>
+            <div>
+                <button
+                    type="submit"
+                    class="w-full px-6 py-3 bg-[#2c4a3e] hover:bg-[#3d6b59] text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105"
+                >
+                    Upload
+                </button>
+            </div>
+        </form>
+        <h3 class="text-lg font-medium text-[#d4c3bc] mt-4">Uploaded Images</h3>
         <div
             id="image-cnt"
             hx-trigger="load"
             hx-get="/api/v1/images"
             hx-swap="innerHTML"
-            class="mt-2 max-w-md w-ful shadow-lg rounded-lg p-6 text-white"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-4 sm:gap-6 sm:gap-y-6 lg:gap-10 lg:gap-y-10 bg-[#100e0d] bg-opacity-50 rounded-lg shadow-lg my-6"
         >
             <!-- Images will be loaded here -->
         </div>

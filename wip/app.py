@@ -1,4 +1,4 @@
-from database import insert_image, get_images, update_image, insert_item, get_items, date_filtered_items, search_items, delete_item, get_item, update_item, clear_table
+from database import insert_image, get_images, get_image, update_image, insert_item, get_items, date_filtered_items, search_items, delete_item, get_item, update_item, clear_table
 from models import User, Token, Items, ItemModel, UploadItem
 from send import send_email
 from typing import List
@@ -37,7 +37,7 @@ templates.env.filters["days_until_expiry"] = days_until_expiry
 async def get_api_key(api_key_header: str = Security(api_key_header)):
     if api_key_header is None:
         raise HTTPException(
-            status_code=HTTP_403_FORBIDDEN, detail="API Key header missing"
+            status_code=HTTP_403_FORBIDDEN, detail="You are missing API Key"
         )
     if api_key_header != API_KEY:
         raise HTTPException(
@@ -81,9 +81,15 @@ async def fetch_items(request: Request, id: int = Query(None)) -> HTMLResponse:
 
 
 @ app.get("/api/v1/images")
-async def fetch_images(request: Request) -> HTMLResponse:
-    images = get_images(connection)
-    return templates.TemplateResponse(request, "./image.html", context=images.model_dump())
+async def fetch_images(request: Request, id: int = Query(None)) -> HTMLResponse:
+    """ images = get_images(connection)
+    return templates.TemplateResponse(request, "./image.html", context=images.model_dump()) """
+    if not id:
+        images = get_images(connection)
+    else:
+        images = get_image(connection, id)
+    # print(images.model_dump().keys())
+    return templates.TemplateResponse(request, "/image.html", context=images.model_dump())
 
 
 @ app.post("/api/v1/images")
