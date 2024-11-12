@@ -93,6 +93,18 @@ def update_image(connection: Connection, id: int):
         )
 
 
+def delete_img(connection: Connection, id: int):
+    with connection:
+        cur = connection.cursor()
+        cur.execute(
+            f'''
+            DELETE FROM pictures
+            WHERE id = :id
+            ''',
+            {'id': id}
+        )
+
+
 def date_filtered_items(connection: Connection) -> Items:
     with connection:
         cur = connection.cursor()

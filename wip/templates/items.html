@@ -21,7 +21,7 @@
                     type="button"
                     id="delete-item"
                     class="bg-[#7a1a1a] hover:bg-[#951e1e] rounded-md px-4 py-2 focus:outline-none focus:shadow-outline"
-                    hx-delete="/api/v1/delete/{{ item.item_id }}"
+                    hx-delete="/api/v1/delete_item/{{ item.item_id }}"
                     hx-target="#item-{{ item.item_id }}"
                     hx-swap="delete"
                     hx-trigger="click"

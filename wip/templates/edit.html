@@ -1,8 +1,9 @@
 <form
+    id="edit-image-{{ id }}"
     hx-put="/api/v1/edit_image/{{ id }}"
-    class="p-5 bg-[#1b1512] rounded"
-    hx-target="#image-{{ id }}"
-    hx-swap="innerHTML"
+    class="p-5 bg-[rgb(27,21,18)] rounded"
+    hx-target="body"
+    hx-swap="beforeend"
 >
     <input
         type="number"
@@ -70,6 +71,7 @@
         <button
             type="submit"
             class="bg-[#1a5f7a] hover:bg-[#1e7495] mr-4 rounded-md px-4 py-2 focus:outline-none focus:shadow-outline text-white"
+            onclick="document.getElementById('image-{{ id }}').classList.add('hidden');"
         >
             Submit
         </button>

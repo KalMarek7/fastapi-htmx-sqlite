@@ -18,6 +18,9 @@
             <button
                 id="delete-image-{{ img.id }}"
                 class="bg-[#7a1a1a] hover:bg-[#951e1e] rounded-md px-4 py-2 focus:outline-none focus:shadow-outline text-white"
+                hx-delete="/api/v1/delete_image/{{ img.id }}"
+                hx-target="#image-{{ img.id }}"
+                hx-swap="delete"
             >
                 X
             </button>

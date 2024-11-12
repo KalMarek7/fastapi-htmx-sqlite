@@ -1,4 +1,4 @@
-from database import insert_image, get_images, get_image, update_image, insert_item, get_items, date_filtered_items, search_items, delete_item, get_item, update_item, clear_table
+from database import insert_image, get_images, get_image, update_image, insert_item, get_items, date_filtered_items, search_items, delete_item, get_item, update_item, clear_table, delete_img
 from models import User, Token, Items, ItemModel, UploadItem
 from send import send_email
 from typing import List
@@ -137,7 +137,14 @@ async def edit_item(
     # print("HAA", item)
     insert_item(connection, item)
     update_image(connection, id)
-    return templates.TemplateResponse(request, "./modal.html", context={"id": id})
+    return templates.TemplateResponse(request, "./modal.html", context={"id": id, "name": name})
+
+
+@ app.delete("/api/v1/delete_image/{id}")
+async def delete_image(request: Request, id: int) -> HTMLResponse:
+    image = get_image(connection, id)
+    delete_img(connection, id)
+    return templates.TemplateResponse(request, "./modal.html", context={"id": id, "name": image.images[0].filename})
 
 
 @ app.get("/api/v1/date_filtered_items")
@@ -177,7 +184,7 @@ async def search(request: Request, search: str = Form(...)) -> HTMLResponse:
     return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
 
 
-@ app.delete("/api/v1/delete/{id}")
+@ app.delete("/api/v1/delete_item/{id}")
 async def delete(request: Request, id: int) -> HTMLResponse:
     delete_item(connection, id)
     items = get_items(connection)

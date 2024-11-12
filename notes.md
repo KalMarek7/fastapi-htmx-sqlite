@@ -33,5 +33,5 @@ https://merakiui.com/components/application-ui/cards
 -   [ ] Maybe add proper form on upload image so no edit image is required?
 -   [x] (use existing "/api/v1/date_filtered_items" endpoint through cron job?) Recurring scan of items to send an email with items about to expire
 -   [x] Refactor endpoints (https://dev.to/msnmongare/best-practices-for-naming-api-endpoints-2n5o?ref=dailydev)
--   [ ] Install tailwind and style UI from scratch
+-   [x] Install tailwind and style UI from scratch
 -   [ ] Secure api key header for ALL requests as access restriction measure
