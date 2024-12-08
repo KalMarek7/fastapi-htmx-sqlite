@@ -105,12 +105,12 @@ def delete_img(connection: Connection, id: int):
         )
 
 
-def date_filtered_items(connection: Connection) -> Items:
+def date_filtered_items(connection: Connection, d: int) -> Items:
     with connection:
         cur = connection.cursor()
         today = datetime.now().date()
         print(today)
-        delta = today + timedelta(days=3)
+        delta = today + timedelta(days=d)
         print(delta)
 
         query = '''

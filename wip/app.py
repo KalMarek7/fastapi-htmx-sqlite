@@ -148,8 +148,8 @@ async def delete_image(request: Request, id: int) -> HTMLResponse:
 
 
 @ app.get("/api/v1/date_filtered_items")
-async def date_filtered_images(request: Request):
-    items = date_filtered_items(connection)
+async def date_filtered_images(request: Request, d: int = Query(None)):
+    items = date_filtered_items(connection, d)
     items_dict = items.model_dump()
     if request.headers.get("custom_format") == "text/html":
         return templates.TemplateResponse(request, "./items.html", context=items.model_dump())

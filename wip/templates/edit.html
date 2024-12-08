@@ -20,7 +20,7 @@
         <input
             type="text"
             name="name"
-            id="name"
+            id="name-{{ id }}"
             required
             class="w-full text-[#b69c93] bg-[#271c16] rounded-md px-3 py-2 focus:outline-none focus:shadow-outline placeholder:text-[#8b6f62]"
         />
@@ -87,3 +87,6 @@
         </button>
     </div>
 </form>
+<script>
+    document.getElementById("name-{{ id }}").focus();
+</script>
