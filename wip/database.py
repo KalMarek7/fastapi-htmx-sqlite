@@ -56,6 +56,7 @@ def get_images(connection: Connection) -> Images:
             SELECT id, src, filename, filesize, initial
             FROM
             pictures
+            ORDER BY id DESC
             '''
         )
         images_list = [UploadItem(**dict(row)) for row in cur.fetchall()]

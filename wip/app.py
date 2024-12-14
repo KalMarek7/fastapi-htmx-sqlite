@@ -148,7 +148,7 @@ async def delete_image(request: Request, id: int) -> HTMLResponse:
 
 
 @ app.get("/api/v1/date_filtered_items")
-async def date_filtered_images(request: Request, d: int = Query(None)):
+async def date_filtered_images(request: Request, d: int = Query(None)) -> HTMLResponse:
     items = date_filtered_items(connection, d)
     items_dict = items.model_dump()
     if request.headers.get("custom_format") == "text/html":
@@ -165,14 +165,14 @@ async def date_filtered_images(request: Request, d: int = Query(None)):
             """
 
         message = "Hello. Below you'll find food items about to expire in the next 3 days.<br><br>" + message
-        send_email(email={
+        email_result = send_email(email={
             "subject": "Test Email from FastAPI",
             "message": message,
             "from_addr": f"{USERNAME}",
             "to_addr": f"{EMAIL}",
             "password": f"{PASSWORD}"
         })
-        return {"message": "success"}
+        return HTMLResponse(content=f"<p class='text-[#d4c3bc] mx-4 pb-4 pt-2'>{email_result}</p>")
 
 
 @ app.post("/api/v1/search")

@@ -35,3 +35,8 @@ https://merakiui.com/components/application-ui/cards
 -   [x] Refactor endpoints (https://dev.to/msnmongare/best-practices-for-naming-api-endpoints-2n5o?ref=dailydev)
 -   [x] Install tailwind and style UI from scratch
 -   [ ] Secure api key header for ALL requests as access restriction measure
+
+-   [x] After uploading img add it at the beginning of images, not at the end
+-   [ ] After editing/submiting img and making it an item, focus view on the modal
+-   [x] Adress send email button. Decide if this is needed, how to use it and what would be the response
+-   [ ] Do file validation (both client side and server side - see claude) for images only as it currently accepts whatever

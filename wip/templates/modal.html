@@ -1,23 +1,24 @@
-<div
-    id="popup-{{ id }}"
-    class="fixed bottom-0 right-0 z-50 rounded-lg shadow-lg p-6 max-w-sm w-full"
->
-    <h2 class="text-center text-xl font-bold mb-4 text-gray-100">
+<div id="popup-{{ id }}" class="rounded-lg shadow-lg p-6 max-w-sm w-full">
+    <h2 class="text-center mb-4 text-[#d4c3bc]">
         Item <span class="font-bold">{{ name }}</span> added successfully
     </h2>
     <button
         id="closeButton-{{ id }}"
         type="button"
-        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 w-full transition duration-150 ease-in-out"
+        class="bg-[#1a5f7a] hover:bg-[#1e7495] text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+        hx-trigger="click"
+        hx-get="/api/v1/images"
+        hx-target="#image-cnt"
+        hx-swap="innerHTML"
     >
         Close
     </button>
 </div>
 
 <script>
-    document
+    /* document
         .getElementById("closeButton-{{ id }}")
         .addEventListener("click", () => {
             document.getElementById("popup-{{ id }}").style.display = "none";
-        });
+        }); */
 </script>

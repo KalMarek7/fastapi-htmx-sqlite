@@ -1,29 +1,31 @@
 {% for img in images %} {% if img.initial %}
 <div id="image-{{ img.id }}" class="text-[#d4c3bc] w-full max-w-sm">
     <div class="bg-[#1b1512] p-5">
-        <div class="flex items-center">
+        <div class="flex justify-between items-center">
             <h1 class="font-bold tracking-tight text-[#d4c3bc]">
                 {{ img.filename }}
             </h1>
-            <button
-                hx-get="/api/v1/edit_image/{{ img.id }}"
-                hx-trigger="click"
-                hx-target="#image-{{ img.id }}"
-                hx-swap="beforeend"
-                class="bg-[#1a5f7a] hover:bg-[#1e7495] rounded-md mr-4 px-4 py-2 focus:outline-none focus:shadow-outline text-white"
-                onclick="this.classList.add('hidden'); document.getElementById('delete-image-{{ img.id }}').classList.add('hidden');"
-            >
-                Edit
-            </button>
-            <button
-                id="delete-image-{{ img.id }}"
-                class="bg-[#7a1a1a] hover:bg-[#951e1e] rounded-md px-4 py-2 focus:outline-none focus:shadow-outline text-white"
-                hx-delete="/api/v1/delete_image/{{ img.id }}"
-                hx-target="#image-{{ img.id }}"
-                hx-swap="delete"
-            >
-                X
-            </button>
+            <div class="flex items-center">
+                <button
+                    hx-get="/api/v1/edit_image/{{ img.id }}"
+                    hx-trigger="click"
+                    hx-target="#image-{{ img.id }}"
+                    hx-swap="beforeend"
+                    class="bg-[#1a5f7a] hover:bg-[#1e7495] rounded-md mr-4 px-4 py-2 focus:outline-none focus:shadow-outline text-white"
+                    onclick="this.classList.add('hidden'); document.getElementById('delete-image-{{ img.id }}').classList.add('hidden');"
+                >
+                    Edit
+                </button>
+                <button
+                    id="delete-image-{{ img.id }}"
+                    class="bg-[#7a1a1a] hover:bg-[#951e1e] rounded-md px-4 py-2 focus:outline-none focus:shadow-outline text-white"
+                    hx-delete="/api/v1/delete_image/{{ img.id }}"
+                    hx-target="#image-{{ img.id }}"
+                    hx-swap="delete"
+                >
+                    X
+                </button>
+            </div>
         </div>
         <p>{{ "{:.2f}".format(img.filesize / 1048576) }} mb</p>
         <div class="aspect-square relative my-3">
