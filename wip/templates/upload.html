@@ -41,6 +41,7 @@
                 </a>
             </div> -->
         </header>
+        <div id="error-cnt" class="text-[#d4c3bc] font-bold text-center"></div>
         <form
             hx-post="/api/v1/images"
             hx-trigger="submit"
@@ -55,6 +56,7 @@
                         >Choose file(s)</label
                     >
                     <input
+                        accept="image/*"
                         id="file-upload"
                         name="file"
                         type="file"
@@ -67,6 +69,7 @@
 
             <div>
                 <button
+                    id="upload-btn"
                     type="submit"
                     class="w-full px-6 py-3 bg-[#2c4a3e] hover:bg-[#3d6b59] text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105"
                 >
@@ -84,5 +87,26 @@
         >
             <!-- Images will be loaded here -->
         </div>
+
+        <!-- The following is required because hx-on="htmx:responseError" wouldn't properly bind -->
+        <script>
+            const errorContainer = document.getElementById("error-cnt");
+            document
+                .querySelector("form")
+                .addEventListener("htmx:responseError", (event) => {
+                    if (event.detail.xhr.status === 400) {
+                        errorContainer.innerHTML = JSON.parse(
+                            event.detail.xhr.responseText
+                        ).detail;
+                        errorContainer.classList.add("mb-6");
+                    }
+                });
+            document
+                .getElementById("upload-btn")
+                .addEventListener("click", () => {
+                    errorContainer.innerHTML = "";
+                    errorContainer.classList.remove("mb-6");
+                });
+        </script>
     </body>
 </html>

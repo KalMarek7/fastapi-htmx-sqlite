@@ -15,12 +15,13 @@ from sqlite3 import Connection, Row
 from datetime import date, datetime
 import os
 import secrets
+import magic
 
 USERNAME = os.getenv("USERNAME", "not_set")
 PASSWORD = os.getenv("PASSWORD", "not_set")
 EMAIL = os.getenv("EMAIL", "not_set")
 
-API_KEY_NAME = "X-API-Key"
+API_KEY_NAME = "Authorization"
 API_KEY = secrets.token_urlsafe(32)
 print(API_KEY)
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
@@ -94,9 +95,25 @@ async def fetch_images(request: Request, id: int = Query(None)) -> HTMLResponse:
 
 @ app.post("/api/v1/images")
 async def upload(request: Request, file: List[UploadFile] = File(...)) -> HTMLResponse:
+    allowed_types = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp"
+    ]
+    files_to_upload = []
     for i in file:
         file_content = await i.read()
-        print(i)
+        # print(i)
+        mime_type = magic.from_buffer(file_content, mime=True)
+        if mime_type not in allowed_types:
+            print(f"Invalid file type {mime_type}")
+            raise HTTPException(status_code=400, detail=f'''Invalid file type of {
+                                mime_type}<br>Only jpeg, png, gif and webp are allowed''')
+        else:
+            files_to_upload.append((i, file_content))
+
+    for i, file_content in files_to_upload:
         encoded_data = base64.b64encode(file_content).decode("utf-8")
         filename = i.filename or "Default-name"
         filesize = i.size or 1337

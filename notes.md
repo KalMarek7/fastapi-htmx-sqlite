@@ -39,4 +39,6 @@ https://merakiui.com/components/application-ui/cards
 -   [x] After uploading img add it at the beginning of images, not at the end
 -   [ ] After editing/submiting img and making it an item, focus view on the modal
 -   [x] Adress send email button. Decide if this is needed, how to use it and what would be the response
--   [ ] Do file validation (both client side and server side - see claude) for images only as it currently accepts whatever
+-   [x] Do file validation (both client side and server side - see claude) for images only as it currently accepts whatever
+-   [ ] Change 'wip' to 'src' and update it in places it is referenced.
+-   [ ] Fix tailwind config/setup because it is backwards rn
