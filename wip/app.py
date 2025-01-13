@@ -71,6 +71,11 @@ async def upload_site(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request, "./upload.html")
 
 
+@ app.get("/email")
+async def email_site(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(request, "./email.html")
+
+
 @ app.get("/api/v1/items")
 async def fetch_items(request: Request, id: int = Query(None)) -> HTMLResponse:
     if not id:
@@ -164,13 +169,21 @@ async def delete_image(request: Request, id: int) -> HTMLResponse:
     return templates.TemplateResponse(request, "./modal.html", context={"id": id, "name": image.images[0].filename})
 
 
-@ app.get("/api/v1/date_filtered_items")
-async def date_filtered_images(request: Request, d: int = Query(None)) -> HTMLResponse:
-    items = date_filtered_items(connection, d)
+@ app.post("/api/v1/date_filtered_items")
+async def date_filtered_images(request: Request, email: str = Form(...), subject: str = Form(...), days=Form(...)) -> HTMLResponse:
+    try:
+        days = int(days)
+    except:
+        return HTMLResponse(content=f"<p id='err' class='text-[#d4c3bc] mt-4'>'Days' field needs to be a number...</p>")
+    items = date_filtered_items(connection, days)
     items_dict = items.model_dump()
-    if request.headers.get("custom_format") == "text/html":
-        return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
+    print(items_dict)
+    if len(items_dict["items"]) == 0:
+        return HTMLResponse(content=f"<p id='err' class='text-[#d4c3bc] mt-4'>No items with specified filter</p>")
     else:
+        """ if request.headers.get("custom_format") == "text/html":
+            return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
+        else: """
         message = ""
         for item in items_dict["items"]:
             message += f"""
@@ -181,15 +194,16 @@ async def date_filtered_images(request: Request, d: int = Query(None)) -> HTMLRe
             <br><br>
             """
 
-        message = "Hello. Below you'll find food items about to expire in the next 3 days.<br><br>" + message
+        message = f"Hello. Below you'll find food items about to expire in the next {
+            days} days.<br><br>" + message
         email_result = send_email(email={
-            "subject": "Test Email from FastAPI",
+            "subject": f"{subject}",
             "message": message,
             "from_addr": f"{USERNAME}",
-            "to_addr": f"{EMAIL}",
+            "to_addr": f"{email}",
             "password": f"{PASSWORD}"
         })
-        return HTMLResponse(content=f"<p class='text-[#d4c3bc] mx-4 pb-4 pt-2'>{email_result}</p>")
+        return HTMLResponse(content=f"<p id='err' class='text-[#d4c3bc] mt-4'>{email_result}</p>")
 
 
 @ app.post("/api/v1/search")

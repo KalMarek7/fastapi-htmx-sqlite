@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>StockSaver | Email</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', path='css/output.css') }}"
+        />
+        <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+    </head>
+    <body class="h-full flex flex-col items-center bg-[#100e0d] p-4">
+        <header
+            class="flex justify-between w-full border-b border-[#271c16] mb-6"
+        >
+            <a
+                href="/"
+                class="text-[#d4c3bc] font-semibold hover:scale-105 mx-4 pb-4 pt-2 text-lg"
+                >Home</a
+            >
+        </header>
+        <form
+            class="flex flex-col"
+            hx-post="/api/v1/date_filtered_items"
+            hx-trigger="submit"
+            hx-target="body"
+            hx-swap="beforeend"
+        >
+            <label for="email" class="text-[#d4c3bc] mb-1">To:</label>
+            <input
+                type="email"
+                name="email"
+                id="email"
+                class="mb-4 placeholder:text-[#8b6f62] text-[#b69c93] bg-[#271c16] rounded-md px-3 py-2 focus:outline-none focus:shadow-outline"
+                required
+                placeholder="e.mail@example.com"
+            />
+            <label for="subject" class="text-[#d4c3bc] mb-1">Subject:</label>
+            <input
+                type="text"
+                name="subject"
+                id="subject"
+                class="mb-4 placeholder:text-[#8b6f62] text-[#b69c93] bg-[#271c16] rounded-md px-3 py-2 focus:outline-none focus:shadow-outline"
+                required
+                placeholder="Food items about to expire"
+                maxlength="100"
+            />
+            <label for="days" class="text-[#d4c3bc] mb-1">Days:</label>
+            <input
+                type="number"
+                name="days"
+                id="days"
+                class="mb-4 placeholder:text-[#8b6f62] text-[#b69c93] bg-[#271c16] rounded-md px-3 py-2 focus:outline-none focus:shadow-outline"
+                required
+                min="1"
+                value="3"
+            />
+            <button
+                type="submit"
+                class="w-full px-6 py-3 bg-[#2c4a3e] hover:bg-[#3d6b59] text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 mt-3"
+            >
+                Submit
+            </button>
+        </form>
+        <script>
+            document
+                .getElementsByTagName("button")[0]
+                .addEventListener("click", () => {
+                    if (document.getElementById("err")) {
+                        document.getElementById("err").remove();
+                    }
+                });
+        </script>
+    </body>
+</html>
