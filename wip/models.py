@@ -39,3 +39,9 @@ class User(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+class Notification(BaseModel):
+    enabled: bool = False
+    subject: str
+    to_addr: str

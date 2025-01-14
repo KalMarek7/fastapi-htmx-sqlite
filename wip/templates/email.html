@@ -20,7 +20,31 @@
                 >Home</a
             >
         </header>
+        <h1 class="font-semibold text-lg text-[#d4c3bc] mb-4">
+            Email notifications:
+            <span
+                id="switch"
+                class="{{ 'text-[#2c4a3e]' if enabled else 'text-red-500' }}"
+                >{{ "ON" if enabled else "OFF" }}</span
+            >
+        </h1>
+        {% if enabled %}
+        <button
+            id="disable"
+            class="text-white bg-[#7a1a1a] hover:bg-[#951e1e] rounded-md px-4 py-2 mb-4 focus:outline-none focus:shadow-outline"
+            hx-patch="/email"
+            hx-trigger="click"
+            hx-target="#switch"
+            hx-swap="outerHTML"
+            onclick="removeReadOnly()"
+        >
+            Disable
+        </button>
+        {% else %}
+        <button id="disable" class="hidden"></button>
+        {% endif %}
         <form
+            id="form"
             class="flex flex-col"
             hx-post="/api/v1/date_filtered_items"
             hx-trigger="submit"
@@ -34,7 +58,15 @@
                 id="email"
                 class="mb-4 placeholder:text-[#8b6f62] text-[#b69c93] bg-[#271c16] rounded-md px-3 py-2 focus:outline-none focus:shadow-outline"
                 required
-                placeholder="e.mail@example.com"
+                {%
+                if
+                enabled
+                %}
+                placeholder="{{ to_addr }}"
+                readonly
+                {%
+                endif
+                %}
             />
             <label for="subject" class="text-[#d4c3bc] mb-1">Subject:</label>
             <input
@@ -43,8 +75,16 @@
                 id="subject"
                 class="mb-4 placeholder:text-[#8b6f62] text-[#b69c93] bg-[#271c16] rounded-md px-3 py-2 focus:outline-none focus:shadow-outline"
                 required
-                placeholder="Food items about to expire"
                 maxlength="100"
+                {%
+                if
+                enabled
+                %}
+                placeholder="{{ subject }}"
+                readonly
+                {%
+                endif
+                %}
             />
             <label for="days" class="text-[#d4c3bc] mb-1">Days:</label>
             <input
@@ -55,10 +95,19 @@
                 required
                 min="1"
                 value="3"
+                {%
+                if
+                enabled
+                %}
+                readonly
+                {%
+                endif
+                %}
             />
             <button
+                id="submit"
                 type="submit"
-                class="w-full px-6 py-3 bg-[#2c4a3e] hover:bg-[#3d6b59] text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 mt-3"
+                class="{{ 'hidden' if enabled }} w-full px-6 py-3 bg-[#2c4a3e] hover:bg-[#3d6b59] text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 mt-3"
             >
                 Submit
             </button>
@@ -71,6 +120,23 @@
                         document.getElementById("err").remove();
                     }
                 });
+            document.getElementById("form").addEventListener("submit", () => {
+                Array.from(document.getElementsByTagName("input")).forEach(
+                    (input) => {
+                        input.readOnly = true;
+                    }
+                );
+            });
+            function removeReadOnly() {
+                if (document.getElementById("err")) {
+                    document.getElementById("err").remove();
+                }
+                Array.from(document.getElementsByTagName("input")).forEach(
+                    (input) => {
+                        input.removeAttribute("readOnly");
+                    }
+                );
+            }
         </script>
     </body>
 </html>

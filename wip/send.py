@@ -1,5 +1,35 @@
+from sqlite3 import Connection
 from email.mime.text import MIMEText
 import smtplib
+from database import date_filtered_items
+
+
+def email_notification(connection: Connection, days: int, email: dict) -> str:
+    return build_message(connection, days, email)
+    # send_email(email)
+
+
+def build_message(connection: Connection, days: int, email: dict) -> str:
+    items = date_filtered_items(connection, days)
+    items_dict = items.model_dump()
+    if len(items_dict["items"]) == 0:
+        print("No items with specified filter")
+        return "No items with specified filter"
+    else:
+        message = ""
+        for item in items_dict["items"]:
+            message += f"""
+            Name: {item['name']}<br>
+            Expiry date: {item['expiry_date']}<br>
+            Category: {item['category']}<br>
+            Notes: {item['notes']}<br>
+            <br><br>
+            """
+
+        message = f"Hello. Below you'll find food items about to expire in the next {
+            days} days.<br><br>" + message
+
+        return send_email({**email, "message": message})
 
 
 def send_email(email: dict) -> str:

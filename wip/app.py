@@ -1,6 +1,6 @@
-from database import insert_image, get_images, get_image, update_image, insert_item, get_items, date_filtered_items, search_items, delete_item, get_item, update_item, clear_table, delete_img
-from models import User, Token, Items, ItemModel, UploadItem
-from send import send_email
+from database import insert_image, get_images, get_image, update_image, insert_item, get_items, date_filtered_items, search_items, delete_item, get_item, update_item, clear_table, delete_img, get_notification, switch_notification, insert_notification
+from models import User, Token, Items, ItemModel, UploadItem, Notification
+from send import email_notification
 from typing import List
 import base64
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends, Query, Security
@@ -19,11 +19,12 @@ import magic
 
 USERNAME = os.getenv("USERNAME", "not_set")
 PASSWORD = os.getenv("PASSWORD", "not_set")
-EMAIL = os.getenv("EMAIL", "not_set")
+# EMAIL = os.getenv("EMAIL", "not_set")
 
 API_KEY_NAME = "Authorization"
 API_KEY = secrets.token_urlsafe(32)
 print(API_KEY)
+# print(datetime.now())
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 
 
@@ -73,7 +74,28 @@ async def upload_site(request: Request) -> HTMLResponse:
 
 @ app.get("/email")
 async def email_site(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse(request, "./email.html")
+    notification = get_notification(connection).model_dump()
+    print(notification)
+    return templates.TemplateResponse(request, "./email.html", context=notification)
+
+
+@ app.patch("/email")
+async def switch_email() -> HTMLResponse:
+    notification = switch_notification(connection)
+    enabled = notification.model_dump()["enabled"]
+    print(f"Current email state: {enabled}")
+    return HTMLResponse(content=f"""
+        <span id='switch' class='text-red-500'>OFF</span>
+        <button id='disable' class='hidden' hx-swap-oob='true'></button>
+        <button
+            id='submit'
+            type='submit'
+            class='w-full px-6 py-3 bg-[#2c4a3e] hover:bg-[#3d6b59] text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 mt-3'
+            hx-swap-oob='true'
+        >
+            Submit
+        </button>
+        """)
 
 
 @ app.get("/api/v1/items")
@@ -175,35 +197,31 @@ async def date_filtered_images(request: Request, email: str = Form(...), subject
         days = int(days)
     except:
         return HTMLResponse(content=f"<p id='err' class='text-[#d4c3bc] mt-4'>'Days' field needs to be a number...</p>")
-    items = date_filtered_items(connection, days)
-    items_dict = items.model_dump()
-    print(items_dict)
-    if len(items_dict["items"]) == 0:
-        return HTMLResponse(content=f"<p id='err' class='text-[#d4c3bc] mt-4'>No items with specified filter</p>")
-    else:
-        """ if request.headers.get("custom_format") == "text/html":
-            return templates.TemplateResponse(request, "./items.html", context=items.model_dump())
-        else: """
-        message = ""
-        for item in items_dict["items"]:
-            message += f"""
-            Name: {item['name']}<br>
-            Expiry date: {item['expiry_date']}<br>
-            Category: {item['category']}<br>
-            Notes: {item['notes']}<br>
-            <br><br>
-            """
-
-        message = f"Hello. Below you'll find food items about to expire in the next {
-            days} days.<br><br>" + message
-        email_result = send_email(email={
-            "subject": f"{subject}",
-            "message": message,
-            "from_addr": f"{USERNAME}",
-            "to_addr": f"{email}",
-            "password": f"{PASSWORD}"
-        })
-        return HTMLResponse(content=f"<p id='err' class='text-[#d4c3bc] mt-4'>{email_result}</p>")
+    notification = Notification(enabled=True, subject=subject, to_addr=email)
+    insert_notification(connection, notification)
+    """ email_result = email_notification(connection, days, {
+        "subject": f"{subject}",
+        "from_addr": f"{USERNAME}",
+        "to_addr": f"{email}",
+        "password": f"{PASSWORD}"
+    }) """
+    return HTMLResponse(content=f"""
+        <p id='err' class='text-[#d4c3bc] mt-4'>email_result</p>
+        <span id='switch' hx-swap-oob='true' class='text-[#2c4a3e]'>ON</span>
+        <button id='submit' hx-swap-oob='true' class='hidden'></button>
+        <button
+            id='disable'
+            class='text-white bg-[#7a1a1a] hover:bg-[#951e1e] rounded-md px-4 py-2 mb-4 focus:outline-none focus:shadow-outline'
+            hx-patch='/email'
+            hx-trigger='click'
+            hx-target='#switch'
+            hx-swap='outerHTML'
+            hx-swap-oob='true'
+            onclick="removeReadOnly()"
+        >
+            Disable
+        </button>
+        """)
 
 
 @ app.post("/api/v1/search")

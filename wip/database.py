@@ -1,5 +1,5 @@
-from models import ItemModel, Items, UploadItem, Images
-import sqlite3
+from models import ItemModel, Items, UploadItem, Images, Notification
+# import sqlite3
 from sqlite3 import Connection
 from datetime import timedelta, datetime
 
@@ -212,6 +212,50 @@ def delete_item(connection: Connection, id: int):
             WHERE id = :id
             ''',
             {'id': id}
+        )
+
+
+def get_notification(connection: Connection) -> Notification:
+    with connection:
+        cur = connection.cursor()
+        cur.execute(
+            '''
+            SELECT * FROM notification
+            '''
+        )
+        notification = Notification(**dict(cur.fetchone()))
+        return notification
+
+
+def switch_notification(connection: Connection) -> Notification:
+    with connection:
+        cur = connection.cursor()
+        cur.execute(
+            '''
+            UPDATE notification
+            SET enabled = NOT enabled
+            RETURNING *;
+            '''
+        )
+        notification = Notification(**dict(cur.fetchone()))
+        return notification
+
+
+def insert_notification(connection: Connection, notification: Notification):
+    with connection:
+        cur = connection.cursor()
+        cur.execute(
+            '''
+            DELETE FROM notification;
+            '''
+        )
+        cur.execute(
+            '''
+            INSERT INTO notification(subject, to_addr, enabled)
+            VALUES
+            (:subject, :to_addr, :enabled);
+            ''',
+            notification.model_dump()
         )
 
 
