@@ -192,12 +192,16 @@ async def delete_image(request: Request, id: int) -> HTMLResponse:
 
 
 @ app.post("/api/v1/date_filtered_items")
-async def date_filtered_images(request: Request, email: str = Form(...), subject: str = Form(...), days=Form(...)) -> HTMLResponse:
+async def date_filtered_images(request: Request, email: str = Form(...), subject: str = Form(...), days=Form(...), time=Form(...)) -> HTMLResponse:
+    print(type(time), time)
+    if len(time) > 5:
+        return HTMLResponse(content=f"<p id='err' class='text-[#d4c3bc] mt-4'>'Time' field is invalid (too long)</p>")
     try:
         days = int(days)
     except:
         return HTMLResponse(content=f"<p id='err' class='text-[#d4c3bc] mt-4'>'Days' field needs to be a number...</p>")
-    notification = Notification(enabled=True, subject=subject, to_addr=email)
+    notification = Notification(
+        enabled=True, subject=subject, to_addr=email, days=days, time=time)
     insert_notification(connection, notification)
     """ email_result = email_notification(connection, days, {
         "subject": f"{subject}",
@@ -207,7 +211,7 @@ async def date_filtered_images(request: Request, email: str = Form(...), subject
     }) """
     return HTMLResponse(content=f"""
         <p id='err' class='text-[#d4c3bc] mt-4'>email_result</p>
-        <span id='switch' hx-swap-oob='true' class='text-[#2c4a3e]'>ON</span>
+        <span id='switch' hx-swap-oob='true' class='text-green-500'>ON</span>
         <button id='submit' hx-swap-oob='true' class='hidden'></button>
         <button
             id='disable'

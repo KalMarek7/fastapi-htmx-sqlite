@@ -24,7 +24,7 @@
             Email notifications:
             <span
                 id="switch"
-                class="{{ 'text-[#2c4a3e]' if enabled else 'text-red-500' }}"
+                class="{{ 'text-green-500' if enabled else 'text-red-500' }}"
                 >{{ "ON" if enabled else "OFF" }}</span
             >
         </h1>
@@ -94,11 +94,28 @@
                 class="mb-4 placeholder:text-[#8b6f62] text-[#b69c93] bg-[#271c16] rounded-md px-3 py-2 focus:outline-none focus:shadow-outline"
                 required
                 min="1"
-                value="3"
                 {%
                 if
                 enabled
                 %}
+                value="{{ days }}"
+                readonly
+                {%
+                endif
+                %}
+            />
+            <label for="time" class="text-[#d4c3bc] mb-1">Time:</label>
+            <input
+                type="time"
+                name="time"
+                id="time"
+                class="mb-4 placeholder:text-[#8b6f62] text-[#b69c93] bg-[#271c16] rounded-md px-3 py-2 focus:outline-none focus:shadow-outline w-full"
+                required
+                {%
+                if
+                enabled
+                %}
+                value="{{ time }}"
                 readonly
                 {%
                 endif

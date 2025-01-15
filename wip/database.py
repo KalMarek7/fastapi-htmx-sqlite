@@ -251,9 +251,9 @@ def insert_notification(connection: Connection, notification: Notification):
         )
         cur.execute(
             '''
-            INSERT INTO notification(subject, to_addr, enabled)
+            INSERT INTO notification(subject, to_addr, enabled, days, time)
             VALUES
-            (:subject, :to_addr, :enabled);
+            (:subject, :to_addr, :enabled, :days, :time);
             ''',
             notification.model_dump()
         )
