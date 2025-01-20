@@ -1,6 +1,6 @@
 from database import insert_image, get_images, get_image, update_image, insert_item, get_items, date_filtered_items, search_items, delete_item, get_item, update_item, clear_table, delete_img, get_notification, switch_notification, insert_notification
 from models import User, Token, Items, ItemModel, UploadItem, Notification
-from send import email_notification
+from send import email_notification, start_scheduler, format_job
 from typing import List
 import base64
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends, Query, Security
@@ -10,12 +10,14 @@ from fastapi.requests import Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security.api_key import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
+from contextlib import asynccontextmanager
 from starlette.status import HTTP_403_FORBIDDEN
 from sqlite3 import Connection, Row
 from datetime import date, datetime
 import os
 import secrets
 import magic
+from apscheduler.schedulers.background import BackgroundScheduler
 
 USERNAME = os.getenv("USERNAME", "not_set")
 PASSWORD = os.getenv("PASSWORD", "not_set")
@@ -48,10 +50,38 @@ async def get_api_key(api_key_header: str = Security(api_key_header)):
     return api_key_header
 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        # Startup logic
+        print("I AM NOW STARTING")
+        notification = get_notification(connection).model_dump()
+        print(notification)
+        if notification["enabled"]:
+            print("Found enabled notification at startup")
+            email_dict = {
+                "subject": f"{notification["subject"]}",
+                "from_addr": f"{USERNAME}",
+                "to_addr": f"{notification["to_addr"]}",
+                "password": f"{PASSWORD}"
+            }
+            start_scheduler(
+                scheduler, notification["days"], notification["time"], email_dict)
+        else:
+            print("No enabled notifications found")
+        yield
+    finally:
+        # Shutdown logic
+        print("I AM NOW STOPPING")
+        # scheduler.remove_all_jobs()
+        scheduler.shutdown()
+
+
+app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 connection = Connection("./database/food.db")
 connection.row_factory = Row
+scheduler = BackgroundScheduler()
 
 
 @ app.get("/restricted")
@@ -74,7 +104,10 @@ async def upload_site(request: Request) -> HTMLResponse:
 
 @ app.get("/email")
 async def email_site(request: Request) -> HTMLResponse:
+    # print(scheduler.get_jobs()[0].next_run_time)
     notification = get_notification(connection).model_dump()
+    if notification["enabled"]:
+        notification["next_run_time"] = scheduler.get_jobs()[0].next_run_time
     print(notification)
     return templates.TemplateResponse(request, "./email.html", context=notification)
 
@@ -84,6 +117,9 @@ async def switch_email() -> HTMLResponse:
     notification = switch_notification(connection)
     enabled = notification.model_dump()["enabled"]
     print(f"Current email state: {enabled}")
+    """ job_id = scheduler.get_jobs()[0].id
+    print(job_id) """
+    scheduler.shutdown()
     return HTMLResponse(content=f"""
         <span id='switch' class='text-red-500'>OFF</span>
         <button id='disable' class='hidden' hx-swap-oob='true'></button>
@@ -203,14 +239,15 @@ async def date_filtered_images(request: Request, email: str = Form(...), subject
     notification = Notification(
         enabled=True, subject=subject, to_addr=email, days=days, time=time)
     insert_notification(connection, notification)
-    """ email_result = email_notification(connection, days, {
+    email_dict = {
         "subject": f"{subject}",
         "from_addr": f"{USERNAME}",
         "to_addr": f"{email}",
         "password": f"{PASSWORD}"
-    }) """
+    }
+    job = start_scheduler(scheduler, days, time, email_dict)
     return HTMLResponse(content=f"""
-        <p id='err' class='text-[#d4c3bc] mt-4'>email_result</p>
+        <p id='err' class='text-[#d4c3bc] mt-4'>Job scheduled. Next run time at: <b>{job.next_run_time}</b></p>
         <span id='switch' hx-swap-oob='true' class='text-green-500'>ON</span>
         <button id='submit' hx-swap-oob='true' class='hidden'></button>
         <button
@@ -273,3 +310,10 @@ async def patch_item(
 async def cps(request: Request, table: str):
     clear_table(connection, table)
     return {"message": "success"}
+
+
+@ app.get("/api/v1/schedule/")
+async def get_schedule():
+    scheduler.print_jobs()
+    scheduled_jobs = scheduler.get_jobs()
+    return {"schedule": [format_job(job) for job in scheduled_jobs]}

@@ -129,6 +129,11 @@
                 Submit
             </button>
         </form>
+        {%if enabled%}
+        <p id="err" class="text-[#d4c3bc] mt-4">
+            Next run time at: <b>{{ next_run_time }}</b>
+        </p>
+        {%endif%}
         <script>
             document
                 .getElementsByTagName("button")[0]

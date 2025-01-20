@@ -1,17 +1,24 @@
-from sqlite3 import Connection
+from sqlite3 import Connection, Row
 from email.mime.text import MIMEText
 import smtplib
 from database import date_filtered_items
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+from apscheduler.job import Job
 
 
-def email_notification(connection: Connection, days: int, email: dict) -> str:
-    return build_message(connection, days, email)
+def email_notification(days: int, email: dict) -> str:
+    return build_message(days, email)
     # send_email(email)
 
 
-def build_message(connection: Connection, days: int, email: dict) -> str:
+def build_message(days: int, email: dict) -> str:
+    connection = Connection("./database/food.db")
+    connection.row_factory = Row
+
     items = date_filtered_items(connection, days)
     items_dict = items.model_dump()
+
     if len(items_dict["items"]) == 0:
         print("No items with specified filter")
         return "No items with specified filter"
@@ -51,3 +58,29 @@ def send_email(email: dict) -> str:
         return "Unable to send email. Error: " + str(e)
     finally:
         server.quit()
+
+
+def start_scheduler(scheduler: BackgroundScheduler, days: int, time: str, email: dict) -> Job:
+    # Specify the start hour (24-hour format)
+    start_hour = int(time.split(":")[0])
+    start_minute = int(time.split(":")[1])
+    print(start_hour, start_minute)
+
+    # Add a job that runs daily at the specified hour and minute
+    job = scheduler.add_job(
+        email_notification,
+        CronTrigger(hour=start_hour, minute=start_minute),
+        kwargs={"days": days, "email": email}
+    )
+    scheduler.print_jobs()
+    scheduler.start()
+    scheduler.print_jobs()
+    return job
+
+
+def format_job(job: Job) -> dict:
+    return {
+        "id": job.id,
+        "next_run_time": str(job.next_run_time),
+        "trigger": str(job.trigger)
+    }
