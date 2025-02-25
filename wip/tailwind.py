@@ -15,5 +15,17 @@ with open(src_css, "w") as f:
     f.write("@tailwind base;\n@tailwind components;\n@tailwind utilities;")
 
 # Run the Tailwind CSS build command
-subprocess.run(["npx", "tailwindcss", "-i", src_css, "-o",
-               dst_css, "--config", config_file, "--minify"], check=True)
+subprocess.run(
+    [
+        "npx",
+        "tailwindcss",
+        "-i",
+        src_css,
+        "-o",
+        dst_css,
+        "--config",
+        config_file,
+        "--minify",
+    ],
+    check=True,
+)
